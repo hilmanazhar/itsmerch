@@ -1,18 +1,26 @@
 <?php
 // src/api/rajaongkir_config.sample.php
-// Copy this file to rajaongkir_config.php and update API Key
+// RajaOngkir Configuration with Railway environment variable support
+
+// Get API Key from environment or use default
+$apiKey = getenv('RAJAONGKIR_API_KEY') ?: 'YOUR_API_KEY_HERE';
+$originId = getenv('RAJAONGKIR_ORIGIN_ID') ?: '69316';
 
 // API Key for Shipping Cost
-define('RAJAONGKIR_API_KEY', 'CWd6ZSw7e4dd34937017a660nedHnolF');
+define('RAJAONGKIR_API_KEY', $apiKey);
 
 // Komerce RajaOngkir API V2 Base URL
 define('RAJAONGKIR_API_URL', 'https://rajaongkir.komerce.id/api/v1');
 
 // Origin location (Sukolilo, Surabaya - ITS campus area)
-define('ORIGIN_SUBDISTRICT_ID', '69316'); // KEPUTIH, SUKOLILO, SURABAYA
+define('ORIGIN_SUBDISTRICT_ID', $originId); // KEPUTIH, SUKOLILO, SURABAYA
 
 /**
  * Make request to RajaOngkir Komerce API
+ * @param string $endpoint - API endpoint
+ * @param string $method - HTTP method
+ * @param array $params - Query params or POST data
+ * @return array
  */
 function rajaongkirRequest($endpoint, $method = 'GET', $params = []) {
     $url = RAJAONGKIR_API_URL . '/' . $endpoint;
@@ -63,33 +71,64 @@ function rajaongkirRequest($endpoint, $method = 'GET', $params = []) {
     return $result;
 }
 
-// Helper functions included
+/**
+ * Get all provinces
+ */
 function getProvinces() {
     $result = rajaongkirRequest('destination/province');
-    return isset($result['error']) ? $result : ($result['data'] ?? []);
+    if (isset($result['error'])) {
+        return $result;
+    }
+    return $result['data'] ?? [];
 }
 
+/**
+ * Get cities by province ID
+ */
 function getCities($provinceId = null) {
     $params = [];
-    if ($provinceId) $params['province_id'] = $provinceId;
+    if ($provinceId) {
+        $params['province_id'] = $provinceId;
+    }
     $result = rajaongkirRequest('destination/city', 'GET', $params);
-    return isset($result['error']) ? $result : ($result['data'] ?? []);
+    if (isset($result['error'])) {
+        return $result;
+    }
+    return $result['data'] ?? [];
 }
 
+/**
+ * Get districts by city ID
+ */
 function getDistricts($cityId) {
     $result = rajaongkirRequest('destination/district', 'GET', ['city_id' => $cityId]);
-    return isset($result['error']) ? $result : ($result['data'] ?? []);
+    if (isset($result['error'])) {
+        return $result;
+    }
+    return $result['data'] ?? [];
 }
 
+/**
+ * Search destination directly
+ */
 function searchDestination($keyword, $limit = 10) {
     $result = rajaongkirRequest('destination/domestic-destination', 'GET', [
-        'search' => $keyword, 'limit' => $limit, 'offset' => 0
+        'search' => $keyword,
+        'limit' => $limit,
+        'offset' => 0
     ]);
-    return isset($result['error']) ? $result : ($result['data'] ?? []);
+    if (isset($result['error'])) {
+        return $result;
+    }
+    return $result['data'] ?? [];
 }
 
+/**
+ * Calculate shipping cost
+ */
 function getShippingCost($destinationId, $weight, $courier) {
     $url = RAJAONGKIR_API_URL . '/calculate/domestic-cost';
+    
     $postData = http_build_query([
         'origin' => ORIGIN_SUBDISTRICT_ID,
         'destination' => $destinationId,
@@ -111,8 +150,19 @@ function getShippingCost($destinationId, $weight, $courier) {
     ]);
     
     $response = curl_exec($curl);
-    $result = json_decode($response, true);
+    $err = curl_error($curl);
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
+    
+    if ($err) {
+        return ['error' => 'Curl Error: ' . $err];
+    }
+    
+    $result = json_decode($response, true);
+    
+    if ($httpCode !== 200) {
+        return ['error' => $result['meta']['message'] ?? 'API failed (HTTP ' . $httpCode . ')'];
+    }
     
     return $result['data'] ?? [];
 }

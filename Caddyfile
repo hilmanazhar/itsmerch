@@ -1,0 +1,48 @@
+{
+    # Railway/Railpack Caddyfile for myITS Merchandise
+    # Document root is set to /app/src
+    
+    auto_https off
+    admin off
+    
+    servers {
+        trusted_proxies static private_ranges
+    }
+}
+
+:{$PORT:8080} {
+    root * /app/src
+    
+    # Enable PHP processing
+    php_server
+    
+    # Handle static files
+    file_server
+    
+    # Try files, then index.php
+    try_files {path} {path}/ /index.html
+    
+    # API routing
+    @api {
+        path /api/*
+    }
+    handle @api {
+        try_files {path} {path}.php
+        php_server
+    }
+    
+    # Compression
+    encode gzip
+    
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+    }
+    
+    # Logging
+    log {
+        output stdout
+    }
+}
