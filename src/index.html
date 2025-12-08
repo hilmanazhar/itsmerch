@@ -78,6 +78,185 @@
 
             <!-- Main Content -->
             <main class="col-md-10 px-4">
+                <!-- Admin Dashboard (hidden by default, shown for admin) -->
+                <div id="adminDashboard" style="display: none;" class="pt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="fw-bold text-white mb-1">Dashboard Admin</h2>
+                            <p class="text-muted mb-0">Selamat datang kembali! Berikut ringkasan toko Anda.</p>
+                        </div>
+                        <button onclick="loadAdminDashboard()" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards Row 1 -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="card bg-dark border-secondary text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-cash-stack fs-4 text-success me-2"></i>
+                                        <small class="text-muted">Total Pendapatan</small>
+                                    </div>
+                                    <h4 class="fw-bold text-success mb-0" id="adminRevenue">Rp 0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card bg-dark border-secondary text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-cart-check fs-4 text-info me-2"></i>
+                                        <small class="text-muted">Total Pesanan</small>
+                                    </div>
+                                    <h4 class="fw-bold text-info mb-0" id="adminOrders">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card bg-dark border-secondary text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-people fs-4 text-primary me-2"></i>
+                                        <small class="text-muted">Total Pengguna</small>
+                                    </div>
+                                    <h4 class="fw-bold text-primary mb-0" id="adminUsers">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card bg-dark border-secondary text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-box-seam fs-4 text-warning me-2"></i>
+                                        <small class="text-muted">Total Produk</small>
+                                    </div>
+                                    <h4 class="fw-bold text-warning mb-0" id="adminProducts">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Status Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-warning bg-opacity-15 border-warning text-warning h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminPending">0</h3>
+                                        <small><i class="bi bi-clock me-1"></i>Pending</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-info bg-opacity-15 border-info text-info h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminProcessing">0</h3>
+                                        <small><i class="bi bi-box-seam me-1"></i>Processing</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-primary bg-opacity-15 border-primary text-primary h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminShipped">0</h3>
+                                        <small><i class="bi bi-truck me-1"></i>Shipped</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-success bg-opacity-15 border-success text-success h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminCompleted">0</h3>
+                                        <small><i class="bi bi-check-circle me-1"></i>Completed</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Charts and Tables Row -->
+                    <div class="row g-4 mb-4">
+                        <!-- Sales Chart -->
+                        <div class="col-12 col-lg-8">
+                            <div class="card bg-dark border-secondary text-white h-100">
+                                <div class="card-header border-secondary">
+                                    <i class="bi bi-graph-up me-2"></i>Penjualan 7 Hari Terakhir
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="salesChart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Top Products -->
+                        <div class="col-12 col-lg-4">
+                            <div class="card bg-dark border-secondary text-white h-100">
+                                <div class="card-header border-secondary">
+                                    <i class="bi bi-trophy me-2"></i>Produk Terlaris
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush" id="adminTopProducts">
+                                        <li class="list-group-item bg-transparent text-muted">Loading...</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders and Low Stock -->
+                    <div class="row g-4 mb-4">
+                        <!-- Recent Orders -->
+                        <div class="col-12 col-lg-8">
+                            <div class="card bg-dark border-secondary text-white">
+                                <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-clock-history me-2"></i>Pesanan Terbaru</span>
+                                    <a href="orders.html" class="btn btn-sm btn-outline-info">Lihat Semua</a>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-dark table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Pelanggan</th>
+                                                    <th>Total</th>
+                                                    <th>Status</th>
+                                                    <th>Tanggal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="adminRecentOrders">
+                                                <tr><td colspan="5" class="text-center text-muted">Loading...</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Low Stock Alerts -->
+                        <div class="col-12 col-lg-4">
+                            <div class="card bg-dark border-secondary text-white h-100">
+                                <div class="card-header border-secondary bg-danger bg-opacity-10 text-danger">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>Stok Rendah
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush" id="adminLowStock">
+                                        <li class="list-group-item bg-transparent text-muted">Loading...</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Content (Hero and Products) -->
+                <div id="userContent">
                 <!-- Hero Section -->
                 <div class="hero-gradient text-white mt-4" data-aos="fade-up">
                     <div class="row align-items-center position-relative" style="z-index: 2;">
@@ -183,6 +362,7 @@
                         <hr class="border-secondary">
                         <p class="small mb-0">&copy; 2025 myITS Merchandise. All rights reserved.</p>
                     </footer>
+                </div> <!-- End userContent -->
             </main>
         </div>
     </div>
@@ -442,15 +622,145 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/app.js"></script>
     <script>
+        let salesChart = null;
+        
         document.addEventListener('DOMContentLoaded', () => {
             AOS.init({
                 duration: 800,
                 once: true
             });
-            loadProducts('per_category', 4);
+            
+            // Check if user is admin
+            const user = getUser();
+            if (user && user.role === 'admin') {
+                document.getElementById('adminDashboard').style.display = 'block';
+                document.getElementById('userContent').style.display = 'none';
+                loadAdminDashboard();
+            } else {
+                loadProducts('per_category', 4);
+            }
         });
+        
+        function loadAdminDashboard() {
+            fetchJson(`${apiBase}/get_sales_stats.php`)
+                .then(data => {
+                    // Stats Cards
+                    document.getElementById('adminRevenue').textContent = 'Rp ' + Number(data.revenue || 0).toLocaleString('id-ID');
+                    document.getElementById('adminOrders').textContent = data.total_orders || 0;
+                    document.getElementById('adminUsers').textContent = data.total_users || 0;
+                    document.getElementById('adminProducts').textContent = data.total_products || 0;
+                    
+                    // Order Status
+                    const status = data.order_status || {};
+                    document.getElementById('adminPending').textContent = status.pending || 0;
+                    document.getElementById('adminProcessing').textContent = status.processing || 0;
+                    document.getElementById('adminShipped').textContent = status.shipped || 0;
+                    document.getElementById('adminCompleted').textContent = status.completed || 0;
+                    
+                    // Recent Orders
+                    const ordersTable = document.getElementById('adminRecentOrders');
+                    if (data.recent_orders && data.recent_orders.length > 0) {
+                        ordersTable.innerHTML = data.recent_orders.map(o => {
+                            const statusClass = {
+                                'pending': 'text-warning',
+                                'processing': 'text-info',
+                                'shipped': 'text-primary',
+                                'completed': 'text-success',
+                                'cancelled': 'text-danger'
+                            }[o.status] || 'text-muted';
+                            return `<tr>
+                                <td>#${o.id}</td>
+                                <td>${escapeHtml(o.name)}</td>
+                                <td>Rp ${Number(o.total_amount).toLocaleString('id-ID')}</td>
+                                <td><span class="${statusClass}">${o.status}</span></td>
+                                <td>${new Date(o.created_at).toLocaleDateString('id-ID')}</td>
+                            </tr>`;
+                        }).join('');
+                    } else {
+                        ordersTable.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Belum ada pesanan</td></tr>';
+                    }
+                    
+                    // Top Products
+                    const topList = document.getElementById('adminTopProducts');
+                    if (data.top_products && data.top_products.length > 0) {
+                        topList.innerHTML = data.top_products.map((p, i) => `
+                            <li class="list-group-item bg-transparent text-white d-flex justify-content-between">
+                                <span>${i + 1}. ${escapeHtml(p.name)}</span>
+                                <span class="badge bg-primary">${p.sold} terjual</span>
+                            </li>
+                        `).join('');
+                    } else {
+                        topList.innerHTML = '<li class="list-group-item bg-transparent text-muted">Belum ada data</li>';
+                    }
+                    
+                    // Low Stock
+                    const lowList = document.getElementById('adminLowStock');
+                    if (data.low_stock && data.low_stock.length > 0) {
+                        lowList.innerHTML = data.low_stock.map(p => `
+                            <li class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-center">
+                                <span>${escapeHtml(p.name)}</span>
+                                <span class="badge bg-danger">${p.stock} sisa</span>
+                            </li>
+                        `).join('');
+                    } else {
+                        lowList.innerHTML = '<li class="list-group-item bg-transparent text-success"><i class="bi bi-check-circle me-2"></i>Semua stok aman</li>';
+                    }
+                    
+                    // Sales Chart
+                    renderSalesChart(data.weekly_sales || []);
+                })
+                .catch(err => {
+                    console.error('Failed to load admin dashboard:', err);
+                });
+        }
+        
+        function renderSalesChart(data) {
+            const ctx = document.getElementById('salesChart');
+            if (!ctx) return;
+            
+            if (salesChart) {
+                salesChart.destroy();
+            }
+            
+            salesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.date),
+                    datasets: [{
+                        label: 'Penjualan (Rp)',
+                        data: data.map(d => d.total),
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#888',
+                                callback: value => 'Rp ' + (value / 1000) + 'k'
+                            },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#888' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 
