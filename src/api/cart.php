@@ -61,9 +61,21 @@ if ($method === 'GET') {
     if ($res->num_rows > 0) {
         // Update existing
         $row = $res->fetch_assoc();
-        $new_qty = ($action === 'add') ? $row['quantity'] + $qty : $qty;
-        $stmt = $mysqli->prepare("UPDATE carts SET quantity=? WHERE id=?");
-        $stmt->bind_param('ii', $new_qty, $row['id']);
+        if ($action === 'add') {
+            $new_qty = $row['quantity'] + $qty;
+        } else {
+            // action 'update' - add qty to current (qty can be negative for decrement)
+            $new_qty = $row['quantity'] + $qty;
+        }
+        
+        // If quantity <= 0, delete the item
+        if ($new_qty <= 0) {
+            $stmt = $mysqli->prepare("DELETE FROM carts WHERE id=?");
+            $stmt->bind_param('i', $row['id']);
+        } else {
+            $stmt = $mysqli->prepare("UPDATE carts SET quantity=? WHERE id=?");
+            $stmt->bind_param('ii', $new_qty, $row['id']);
+        }
     } else {
         // Insert new
         if ($variant_id) {

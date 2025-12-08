@@ -900,8 +900,12 @@ function showCart() {
   let html = `<ul class="list-group mb-2">` + cart.map((it, idx) => `<li class="list-group-item d-flex justify-content-between align-items-center">
     <div><strong>${escapeHtml(it.name)}</strong><br><small>Rp ${Number(it.price).toLocaleString()}</small></div>
     <div class="text-end">
-      <span class="badge bg-primary rounded-pill">${it.quantity}</span><br>
-      <button class="btn btn-sm btn-outline-secondary mt-1 remove-item" data-id="${it.product_id}" data-idx="${idx}">Hapus</button>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <button class="btn btn-sm btn-outline-secondary qty-minus" data-id="${it.product_id}" data-idx="${idx}" style="width:28px;height:28px;padding:0;">-</button>
+        <span class="badge bg-primary rounded-pill" style="min-width:24px;">${it.quantity}</span>
+        <button class="btn btn-sm btn-outline-secondary qty-plus" data-id="${it.product_id}" data-idx="${idx}" style="width:28px;height:28px;padding:0;">+</button>
+      </div>
+      <button class="btn btn-sm btn-outline-danger remove-item" data-id="${it.product_id}" data-idx="${idx}"><i class="bi bi-trash"></i></button>
     </div>
   </li>`).join('') + `</ul>`;
 
@@ -910,6 +914,41 @@ function showCart() {
   const total = cart.reduce((s, it) => s + it.price * it.quantity, 0);
   totalEl.innerText = 'Rp ' + Number(total).toLocaleString();
 
+  // Handle quantity decrease
+  list.querySelectorAll('.qty-minus').forEach(b => b.addEventListener('click', () => {
+    const prodId = b.dataset.id;
+    const user = getUser();
+
+    if (user) {
+      fetchJson(`${apiBase}/cart.php`, {
+        method: 'POST',
+        body: { user_id: user.id, product_id: prodId, quantity: -1, action: 'update' }
+      }).then(res => {
+        if (res.success) {
+          loadCartFromServer().then(showCart);
+        }
+      });
+    }
+  }));
+
+  // Handle quantity increase
+  list.querySelectorAll('.qty-plus').forEach(b => b.addEventListener('click', () => {
+    const prodId = b.dataset.id;
+    const user = getUser();
+
+    if (user) {
+      fetchJson(`${apiBase}/cart.php`, {
+        method: 'POST',
+        body: { user_id: user.id, product_id: prodId, quantity: 1, action: 'update' }
+      }).then(res => {
+        if (res.success) {
+          loadCartFromServer().then(showCart);
+        }
+      });
+    }
+  }));
+
+  // Handle remove item
   list.querySelectorAll('.remove-item').forEach(b => b.addEventListener('click', () => {
     const prodId = b.dataset.id;
     const idx = parseInt(b.dataset.idx);
@@ -919,7 +958,7 @@ function showCart() {
       fetchJson(`${apiBase}/cart.php?user_id=${user.id}&product_id=${prodId}`, { method: 'DELETE' })
         .then(res => {
           if (res.success) {
-            loadCartFromServer().then(showCart); // Reload and show
+            loadCartFromServer().then(showCart);
           }
         });
     } else {
