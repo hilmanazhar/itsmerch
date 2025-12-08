@@ -266,11 +266,13 @@
                         <li class="nav-item">
                             <a class="nav-link filter-badge" href="#" data-filter="completed">
                                 <i class="bi bi-check-circle me-1"></i>Selesai
+                                <span class="badge bg-secondary count" id="countCompleted">0</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link filter-badge" href="#" data-filter="cancelled">
                                 <i class="bi bi-x-circle me-1"></i>Batal
+                                <span class="badge bg-secondary count" id="countCancelled">0</span>
                             </a>
                         </li>
                     </ul>
@@ -409,6 +411,8 @@
             document.getElementById('countUnpaid').textContent = counts.unpaid;
             document.getElementById('countPacking').textContent = counts.packing;
             document.getElementById('countShipped').textContent = counts.shipped;
+            document.getElementById('countCompleted').textContent = counts.completed;
+            document.getElementById('countCancelled').textContent = counts.cancelled;
         }
 
         function filterOrders() {
