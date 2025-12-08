@@ -911,7 +911,7 @@ function showCart() {
     </div>
     <div class="text-end">
       <div class="d-flex align-items-center gap-2 mb-1">
-        <button class="btn btn-sm btn-outline-secondary qty-minus" data-id="${it.product_id}" data-variant="${it.variant_id || ''}" data-cart-id="${it.id || ''}" data-idx="${idx}" style="width:28px;height:28px;padding:0;" ${it.quantity <= 1 ? 'disabled' : ''}>-</button>
+        <button class="btn btn-sm btn-outline-secondary qty-minus" data-id="${it.product_id}" data-variant="${it.variant_id || ''}" data-cart-id="${it.id || ''}" data-qty="${it.quantity}" data-idx="${idx}" style="width:28px;height:28px;padding:0;">-</button>
         <span class="badge bg-primary rounded-pill" style="min-width:24px;">${it.quantity}</span>
         <button class="btn btn-sm btn-outline-secondary qty-plus" data-id="${it.product_id}" data-variant="${it.variant_id || ''}" data-cart-id="${it.id || ''}" data-idx="${idx}" style="width:28px;height:28px;padding:0;">+</button>
       </div>
@@ -925,26 +925,38 @@ function showCart() {
   const total = cart.reduce((s, it) => s + it.price * it.quantity, 0);
   totalEl.innerText = 'Rp ' + Number(total).toLocaleString();
 
-  // Handle quantity decrease
+  // Handle quantity decrease (or delete if qty=1)
   list.querySelectorAll('.qty-minus').forEach(b => b.addEventListener('click', () => {
-    if (b.disabled) return;
     const prodId = b.dataset.id;
     const variantId = b.dataset.variant || null;
-    const cartId = b.dataset.cartId || null;
+    const currentQty = parseInt(b.dataset.qty) || 1;
     const user = getUser();
 
     if (user) {
-      const body = { user_id: user.id, product_id: prodId, quantity: -1, action: 'update' };
-      if (variantId) body.variant_id = variantId;
+      if (currentQty <= 1) {
+        // Delete item if quantity is 1
+        let deleteUrl = `${apiBase}/cart.php?user_id=${user.id}&product_id=${prodId}`;
+        if (variantId) deleteUrl += `&variant_id=${variantId}`;
 
-      fetchJson(`${apiBase}/cart.php`, {
-        method: 'POST',
-        body: body
-      }).then(res => {
-        if (res.success) {
-          loadCartFromServer().then(showCart);
-        }
-      });
+        fetchJson(deleteUrl, { method: 'DELETE' }).then(res => {
+          if (res.success) {
+            loadCartFromServer().then(showCart);
+          }
+        });
+      } else {
+        // Decrease quantity
+        const body = { user_id: user.id, product_id: prodId, quantity: -1, action: 'update' };
+        if (variantId) body.variant_id = variantId;
+
+        fetchJson(`${apiBase}/cart.php`, {
+          method: 'POST',
+          body: body
+        }).then(res => {
+          if (res.success) {
+            loadCartFromServer().then(showCart);
+          }
+        });
+      }
     }
   }));
 
