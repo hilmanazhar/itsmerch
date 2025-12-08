@@ -430,7 +430,10 @@
             // Size buttons
             document.querySelectorAll('.size-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+                    document.querySelectorAll('.size-btn').forEach(b => {
+                        b.classList.remove('active', 'btn-primary');
+                        b.classList.add('btn-outline-light');
+                    });
                     btn.classList.add('active', 'btn-primary');
                     btn.classList.remove('btn-outline-light');
                     selectedSize = btn.dataset.sizeId;
@@ -441,7 +444,10 @@
             // Color buttons
             document.querySelectorAll('.color-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+                    document.querySelectorAll('.color-btn').forEach(b => {
+                        b.classList.remove('active', 'btn-primary');
+                        b.classList.add('btn-outline-light');
+                    });
                     btn.classList.add('active', 'btn-primary');
                     btn.classList.remove('btn-outline-light');
                     selectedColor = btn.dataset.colorId;
