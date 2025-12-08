@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>myITS Merchandise - Premium Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo-mini">my<span>ITS</span> Merch</div>
+        <a href="#" class="cart-link" data-bs-toggle="offcanvas" data-bs-target="#cartDrawer">
+            <i class="bi bi-cart"></i>
+            <span class="badge rounded-pill bg-primary" id="mobile-cart-count">0</span>
+        </a>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 sidebar d-flex flex-column">
+                <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/images/logo.png" alt="Logo" style="width: 40px; height: 40px;">
+                    <h2 style="margin: 0; font-size: 1.2rem;">my<span style="color:#9b59b6">ITS</span><br>Merch</h2>
+                </div>
+                <ul class="nav flex-column mb-auto nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html"><i class="bi bi-house-door"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalog.html"><i class="bi bi-box"></i> Katalog Produk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="cartButton" class="nav-link" href="#" data-bs-toggle="offcanvas"
+                            data-bs-target="#cartDrawer"><i class="bi bi-cart"></i> Keranjang <span
+                                class="badge ms-2 rounded-pill" id="cart-count">0</span></a>
+                    </li>
+                </ul>
+                <div class="mt-auto">
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item" id="loginNavItem">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i
+                                    class="bi bi-box-arrow-in-right"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="bi bi-info-circle"></i> Tentang</a>
+                        </li>
+                    </ul>
+                    <div id="userBadge" class="mt-3 p-3 rounded bg-dark bg-opacity-50 text-center small fade-in"
+                        style="display:none;"></div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 px-4">
+                <!-- Hero Section -->
+                <div class="hero-gradient text-white mt-4" data-aos="fade-up">
+                    <div class="row align-items-center position-relative" style="z-index: 2;">
+                        <div class="col-md-7">
+                            <span class="badge bg-light text-primary mb-3 px-3 py-2 rounded-pill fw-bold">Official
+                                Merchandise</span>
+                            <h1 class="display-4 fw-bold mb-3">Tunjukkan Banggamu<br>Sebagai Bagian ITS</h1>
+                            <p class="fs-5 mb-4 text-white-50">Koleksi eksklusif atribut Institut Teknologi Sepuluh
+                                Nopember. Desain premium, kualitas terbaik.</p>
+                            <div class="d-flex gap-3">
+                                <a href="catalog.html"
+                                    class="btn btn-light text-primary fw-bold px-4 py-3 rounded-pill shadow-sm">
+                                    <i class="bi bi-bag-fill me-2"></i> Belanja Sekarang
+                                </a>
+                                <a href="#latest" class="btn btn-outline-light fw-bold px-4 py-3 rounded-pill">
+                                    Lihat Terbaru
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-5 d-none d-md-block text-center">
+                            <img src="assets/images/hero-banner.jpg" alt="ITS Merchandise Collection"
+                                class="img-fluid rounded-circle shadow-lg"
+                                style="border: 4px solid rgba(255,255,255,0.2); width: 350px; height: 350px; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latest Products -->
+                <div id="latest" class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
+                    <div>
+                        <h3 class="fw-bold mb-0">Produk Terbaru</h3>
+                        <p class="text-muted small mb-0">Pilihan terbaik minggu ini</p>
+                    </div>
+                    <a href="catalog.html" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                        Lihat Semua <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div id="product-grid" class="row row-cols-1 row-cols-md-3 g-4" data-aos="fade-up" data-aos-delay="200">
+                    <!-- Products will be loaded here -->
+                    <div class="col text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="row mt-5 g-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="col-md-4">
+                        <div
+                            class="p-4 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-shield-check fs-1 text-primary mb-3"></i>
+                            <h5>100% Original</h5>
+                            <p class="text-muted small mb-0">Produk resmi berlisensi langsung dari ITS.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div
+                            class="p-4 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-truck fs-1 text-primary mb-3"></i>
+                            <h5>Pengiriman Cepat</h5>
+                            <p class="text-muted small mb-0">Melayani pengiriman ke seluruh Indonesia.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div
+                            class="p-4 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 h-100">
+                            <i class="bi bi-heart fs-1 text-primary mb-3"></i>
+                            <h5>Dibuat dengan Cinta</h5>
+                            <p class="text-muted small mb-0">Desain karya mahasiswa ITS yang kreatif.</p>
+                        </div>
+                    </div>
+                    <!-- Footer -->
+                    <footer class="text-center text-muted py-5 mt-5 border-top border-secondary" data-aos="fade-up">
+                        <div class="row g-4 mb-4">
+                            <div class="col-12 col-md-4">
+                                <h6 class="text-white fw-bold mb-3">myITS Merchandise</h6>
+                                <p class="small mb-0">Toko resmi merchandise Institut Teknologi Sepuluh Nopember
+                                    Surabaya.</p>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <h6 class="text-white fw-bold mb-3">Link Cepat</h6>
+                                <ul class="list-unstyled small">
+                                    <li class="mb-2"><a href="catalog.html"
+                                            class="text-muted text-decoration-none">Katalog</a></li>
+                                    <li class="mb-2"><a href="about.html"
+                                            class="text-muted text-decoration-none">Tentang Kami</a></li>
+                                    <li><a href="kebijakan.html" class="text-muted text-decoration-none">Kebijakan</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <h6 class="text-white fw-bold mb-3">Kontak</h6>
+                                <ul class="list-unstyled small">
+                                    <li class="mb-2"><i class="bi bi-envelope me-2"></i>merchandise@its.ac.id</li>
+                                    <li class="mb-2"><i class="bi bi-telephone me-2"></i>(031) 5946230</li>
+                                    <li><i class="bi bi-geo-alt me-2"></i>Kampus ITS Sukolilo</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr class="border-secondary">
+                        <p class="small mb-0">&copy; 2024 myITS Merchandise. All rights reserved.</p>
+                    </footer>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="loginForm">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Selamat Datang Kembali</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-4">
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i
+                                    class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control border-secondary text-white" name="email"
+                                placeholder="nama@email.com" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i
+                                    class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control border-secondary text-white" name="password"
+                                placeholder="******" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">Masuk
+                        Sekarang</button>
+                    <div class="text-center mt-3">
+                        <span class="text-muted small">Belum punya akun?</span> <a href="register.html"
+                            class="text-primary text-decoration-none fw-bold">Daftar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartDrawer">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title fw-bold"><i class="bi bi-bag me-2"></i>Keranjang Belanja</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div id="cart-items" class="list-group mb-3 flex-grow-1 overflow-auto">
+                <!-- Cart items here -->
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-cart-x fs-1 mb-2"></i>
+                    <p>Keranjang kosong</p>
+                </div>
+            </div>
+            <div class="mt-auto border-top border-secondary pt-3">
+                <div class="d-flex justify-content-between mb-3 fs-5 fw-bold">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-primary">Rp 0</span>
+                </div>
+                <button onclick="window.location.href='checkout.html'"
+                    class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-lg">
+                    Checkout Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Floating Action Button -->
+    <div id="adminFab" class="position-fixed bottom-0 end-0 p-4" style="z-index: 1050; display: none;">
+        <button class="btn btn-success btn-lg rounded-circle shadow-lg" onclick="showAddProductModal()"
+            style="width: 60px; height: 60px;">
+            <i class="bi bi-plus-lg"></i>
+        </button>
+    </div>
+
+    <!-- Modal Add Product -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <form class="modal-content" id="addProductForm">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Tambah Produk Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Nama Produk <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea class="form-control" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="price" required>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Stok <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="stock" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">URL Gambar</label>
+                                <input type="text" class="form-control" name="image_url" placeholder="https://...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark border-secondary h-100">
+                                <div class="card-header border-secondary">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="hasVariants"
+                                            onchange="toggleVariantFields()">
+                                        <label class="form-check-label" for="hasVariants">
+                                            <i class="bi bi-layers me-1"></i>Produk memiliki varian
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="variantFields" style="display: none;">
+                                    <p class="text-muted small">Ketik varian yang tersedia, pisahkan dengan koma:</p>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small">Ukuran</label>
+                                        <input type="text" class="form-control form-control-sm" id="variantSizes"
+                                            placeholder="Contoh: S, M, L, XL, XXL">
+                                        <small class="text-muted">Pisahkan dengan koma</small>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small">Warna</label>
+                                        <input type="text" class="form-control form-control-sm" id="variantColors"
+                                            placeholder="Contoh: Hitam, Putih, Biru, Merah">
+                                        <small class="text-muted">Pisahkan dengan koma</small>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small">Stok per Varian</label>
+                                        <input type="number" class="form-control form-control-sm" id="variantStock"
+                                            value="10" min="0">
+                                    </div>
+
+                                    <div class="alert alert-info py-2 small mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Varian akan dibuat untuk setiap kombinasi ukuran x warna.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg me-1"></i>Simpan Produk
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Product -->
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="editProductForm">
+                <input type="hidden" name="id">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Edit Produk</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Produk</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Harga (Rp)</label>
+                            <input type="number" class="form-control" name="price" required>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Stok</label>
+                            <input type="number" class="form-control" name="stock" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">URL Gambar</label>
+                        <input type="text" class="form-control" name="image_url">
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Update Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+            loadProducts('newest', 3);
+        });
+    </script>
+</body>
+
+</html>

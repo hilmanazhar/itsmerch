@@ -1,0 +1,26 @@
+# Sensitive Config Files
+src/api/db.php
+src/api/rajaongkir_config.php
+src/api/midtrans_config.php
+src/api/config.php
+src/api/email_config.php
+
+# Logs
+*.log
+src/api/payment_log.txt
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# User Uploads
+# src/assets/images/products/
+# (Commented out effectively: we want to keep product images in git for this portfolio unless they are massive)
+
+# Editor Directories
+.vscode/
+.idea/
+
+# Dependencies
+vendor/
+node_modules/

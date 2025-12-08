@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kebijakan & Syarat Ketentuan - myITS Merchandise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Kebijakan privasi, syarat dan ketentuan, serta kebijakan pengembalian di myITS Merchandise.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .policy-nav {
+            position: sticky;
+            top: 20px;
+        }
+
+        .policy-nav .nav-link {
+            color: #adb5bd;
+            padding: 10px 15px;
+            border-left: 3px solid transparent;
+            margin-bottom: 5px;
+        }
+
+        .policy-nav .nav-link:hover {
+            color: var(--its-blue-light);
+            background: rgba(0, 123, 192, 0.1);
+        }
+
+        .policy-nav .nav-link.active {
+            color: var(--its-blue-light);
+            border-left-color: var(--its-blue);
+            background: rgba(0, 123, 192, 0.1);
+        }
+
+        .policy-section {
+            padding-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .policy-section h3 {
+            border-bottom: 2px solid var(--its-blue);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo-mini">Kebijakan</div>
+        <a href="about.html" class="cart-link">
+            <i class="bi bi-info-circle"></i>
+        </a>
+    </header>
+
+    <div class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 sidebar d-flex flex-column">
+                <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/images/logo.png" alt="Logo" style="width: 40px; height: 40px;">
+                    <h2 style="margin: 0; font-size: 1.2rem;">my<span style="color:#9b59b6">ITS</span><br>Merch</h2>
+                </div>
+                <ul class="nav flex-column mb-auto nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalog.html"><i class="bi bi-box"></i> Katalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html"><i class="bi bi-info-circle"></i> Tentang Kami</a>
+                    </li>
+                </ul>
+                <div class="mt-auto p-3" id="userBadge"></div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10">
+                <div class="row">
+                    <!-- Policy Navigation (Desktop) -->
+                    <div class="col-lg-3 d-none d-lg-block py-4">
+                        <div class="policy-nav">
+                            <h6 class="text-muted mb-3 px-3">DAFTAR ISI</h6>
+                            <nav class="nav flex-column">
+                                <a class="nav-link active" href="#privacy">Kebijakan Privasi</a>
+                                <a class="nav-link" href="#terms">Syarat & Ketentuan</a>
+                                <a class="nav-link" href="#return">Pengembalian & Refund</a>
+                                <a class="nav-link" href="#shipping">Pengiriman</a>
+                                <a class="nav-link" href="#payment">Pembayaran</a>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Policy Content -->
+                    <div class="col-lg-9 px-4 py-4">
+                        <h2 class="fw-bold text-white mb-4">
+                            <i class="bi bi-file-earmark-text text-info me-2"></i>Kebijakan & Syarat Ketentuan
+                        </h2>
+                        <p class="text-muted mb-5">Terakhir diperbarui: Desember 2024</p>
+
+                        <!-- Privacy Policy -->
+                        <section id="privacy" class="policy-section">
+                            <h3 class="fw-bold text-white">
+                                <i class="bi bi-shield-lock me-2"></i>Kebijakan Privasi
+                            </h3>
+                            <div class="text-muted">
+                                <p>myITS Merchandise berkomitmen untuk melindungi privasi data Anda. Berikut adalah
+                                    informasi tentang bagaimana kami mengumpulkan, menggunakan, dan melindungi data
+                                    Anda.</p>
+
+                                <h5 class="text-white mt-4">Data yang Kami Kumpulkan</h5>
+                                <ul>
+                                    <li>Informasi akun: nama, email, nomor telepon</li>
+                                    <li>Alamat pengiriman untuk keperluan pengiriman pesanan</li>
+                                    <li>Riwayat transaksi dan pembelian</li>
+                                    <li>Data cookies untuk meningkatkan pengalaman pengguna</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Penggunaan Data</h5>
+                                <ul>
+                                    <li>Memproses dan mengirimkan pesanan Anda</li>
+                                    <li>Mengirimkan update status pesanan</li>
+                                    <li>Berkomunikasi terkait pertanyaan atau keluhan</li>
+                                    <li>Meningkatkan layanan dan pengalaman pengguna</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Keamanan Data</h5>
+                                <p>Kami menggunakan enkripsi SSL dan protokol keamanan standar industri untuk melindungi
+                                    data Anda. Data pembayaran diproses melalui payment gateway yang aman (Midtrans) dan
+                                    tidak disimpan di server kami.</p>
+                            </div>
+                        </section>
+
+                        <!-- Terms & Conditions -->
+                        <section id="terms" class="policy-section">
+                            <h3 class="fw-bold text-white">
+                                <i class="bi bi-file-text me-2"></i>Syarat & Ketentuan
+                            </h3>
+                            <div class="text-muted">
+                                <p>Dengan menggunakan layanan myITS Merchandise, Anda menyetujui syarat dan ketentuan
+                                    berikut:</p>
+
+                                <h5 class="text-white mt-4">Akun Pengguna</h5>
+                                <ul>
+                                    <li>Anda harus memberikan informasi yang akurat saat mendaftar</li>
+                                    <li>Anda bertanggung jawab menjaga kerahasiaan password akun</li>
+                                    <li>Satu akun hanya boleh digunakan oleh satu pengguna</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Pemesanan</h5>
+                                <ul>
+                                    <li>Semua harga dalam mata uang Rupiah (IDR)</li>
+                                    <li>Harga dapat berubah sewaktu-waktu tanpa pemberitahuan</li>
+                                    <li>Pesanan yang sudah dibayar tidak dapat dibatalkan</li>
+                                    <li>Ketersediaan produk tergantung stok yang ada</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Hak Kekayaan Intelektual</h5>
+                                <p>Semua desain dan logo ITS yang digunakan adalah properti resmi Institut Teknologi
+                                    Sepuluh Nopember dan dilindungi hak cipta.</p>
+                            </div>
+                        </section>
+
+                        <!-- Return Policy -->
+                        <section id="return" class="policy-section">
+                            <h3 class="fw-bold text-white">
+                                <i class="bi bi-arrow-return-left me-2"></i>Pengembalian & Refund
+                            </h3>
+                            <div class="text-muted">
+                                <h5 class="text-white mt-4">Syarat Pengembalian</h5>
+                                <ul>
+                                    <li>Produk dapat dikembalikan dalam 7 hari setelah diterima</li>
+                                    <li>Produk harus dalam kondisi baru dan belum digunakan</li>
+                                    <li>Kemasan asli dan label harus masih lengkap</li>
+                                    <li>Pengembalian tidak berlaku untuk produk custom/personalisasi</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Proses Refund</h5>
+                                <ul>
+                                    <li>Hubungi customer service kami untuk mengajukan pengembalian</li>
+                                    <li>Kirimkan produk kembali dengan ongkos kirim ditanggung pembeli</li>
+                                    <li>Setelah produk diterima dan diperiksa, refund akan diproses</li>
+                                    <li>Refund akan dikembalikan ke metode pembayaran asal dalam 7-14 hari kerja</li>
+                                </ul>
+
+                                <div class="alert alert-warning mt-4">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    <strong>Catatan:</strong> Produk yang rusak atau cacat produksi akan diganti dengan
+                                    produk baru tanpa biaya tambahan.
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Shipping Policy -->
+                        <section id="shipping" class="policy-section">
+                            <h3 class="fw-bold text-white">
+                                <i class="bi bi-truck me-2"></i>Pengiriman
+                            </h3>
+                            <div class="text-muted">
+                                <h5 class="text-white mt-4">Jasa Pengiriman</h5>
+                                <p>Kami bekerja sama dengan berbagai jasa pengiriman terpercaya:</p>
+                                <ul>
+                                    <li>JNE (YES, REG, OKE)</li>
+                                    <li>J&T Express</li>
+                                    <li>SiCepat</li>
+                                    <li>POS Indonesia</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Waktu Pemrosesan</h5>
+                                <ul>
+                                    <li>Pesanan diproses dalam 1-3 hari kerja</li>
+                                    <li>Pesanan pada hari libur akan diproses pada hari kerja berikutnya</li>
+                                    <li>Nomor resi akan dikirimkan setelah pesanan dikirim</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Biaya Pengiriman</h5>
+                                <p>Biaya pengiriman dihitung berdasarkan berat produk dan lokasi tujuan. Anda dapat
+                                    melihat estimasi biaya saat checkout.</p>
+                            </div>
+                        </section>
+
+                        <!-- Payment Policy -->
+                        <section id="payment" class="policy-section">
+                            <h3 class="fw-bold text-white">
+                                <i class="bi bi-credit-card me-2"></i>Pembayaran
+                            </h3>
+                            <div class="text-muted">
+                                <h5 class="text-white mt-4">Metode Pembayaran</h5>
+                                <p>Kami menerima berbagai metode pembayaran melalui Midtrans:</p>
+                                <ul>
+                                    <li>Transfer Bank (BCA, BNI, BRI, Mandiri, dll.)</li>
+                                    <li>Virtual Account</li>
+                                    <li>E-Wallet (GoPay, ShopeePay, OVO, Dana)</li>
+                                    <li>Kartu Kredit/Debit</li>
+                                    <li>Alfamart/Indomaret</li>
+                                </ul>
+
+                                <h5 class="text-white mt-4">Keamanan Pembayaran</h5>
+                                <p>Semua transaksi pembayaran diproses melalui Midtrans yang memiliki sertifikasi
+                                    PCI-DSS Level 1, standar keamanan tertinggi untuk transaksi kartu.</p>
+
+                                <h5 class="text-white mt-4">Batas Waktu Pembayaran</h5>
+                                <p>Pembayaran harus diselesaikan dalam 24 jam setelah pesanan dibuat. Pesanan yang tidak
+                                    dibayar akan otomatis dibatalkan.</p>
+                            </div>
+                        </section>
+
+                        <!-- Footer -->
+                        <footer class="text-center text-muted py-5 mt-5 border-top border-secondary">
+                            <p class="mb-2">&copy; 2024 myITS Merchandise. All rights reserved.</p>
+                            <p class="small mb-0">
+                                <a href="about.html" class="text-muted me-3">Tentang Kami</a>
+                                <a href="kebijakan.html" class="text-muted me-3">Kebijakan</a>
+                                <a href="catalog.html" class="text-muted">Katalog</a>
+                            </p>
+                        </footer>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Smooth scroll and active link
+        document.querySelectorAll('.policy-nav .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                document.querySelectorAll('.policy-nav .nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // Update active link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.policy-section');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.policy-nav .nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

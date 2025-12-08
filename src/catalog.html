@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Katalog - myITS Merchandise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        .category-btn {
+            transition: all 0.2s;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(45deg, var(--its-blue), var(--its-blue-dark)) !important;
+            border-color: var(--its-blue) !important;
+            color: white !important;
+        }
+
+        .category-btn:not(.active):hover {
+            background: rgba(0, 123, 192, 0.2);
+            border-color: var(--its-blue);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo-mini">my<span>ITS</span> Merch</div>
+        <a href="#" class="cart-link" data-bs-toggle="offcanvas" data-bs-target="#cartDrawer">
+            <i class="bi bi-cart"></i>
+            <span class="badge rounded-pill bg-primary" id="mobile-cart-count">0</span>
+        </a>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 sidebar d-flex flex-column">
+                <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/images/logo.png" alt="Logo" style="width: 40px; height: 40px;">
+                    <h2 style="margin: 0; font-size: 1.2rem;">my<span style="color:#9b59b6">ITS</span><br>Merch</h2>
+                </div>
+                <ul class="nav flex-column mb-auto nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="catalog.html"><i class="bi bi-box"></i> Katalog Produk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="cartButton" class="nav-link" href="#" data-bs-toggle="offcanvas"
+                            data-bs-target="#cartDrawer"><i class="bi bi-cart"></i> Keranjang <span
+                                class="badge ms-2 rounded-pill" id="cart-count">0</span></a>
+                    </li>
+                </ul>
+                <div class="mt-auto">
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item" id="loginNavItem">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i
+                                    class="bi bi-box-arrow-in-right"></i> Login</a>
+                        </li>
+                    </ul>
+                    <div id="userBadge" class="mt-3 p-3 rounded bg-dark bg-opacity-50 text-center small fade-in"
+                        style="display:none;"></div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 px-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pt-4"
+                    data-aos="fade-down">
+                    <div class="mb-3 mb-md-0">
+                        <h2 class="fw-bold text-white"><i class="fas fa-box-open me-2 text-info"></i> Katalog Lengkap
+                        </h2>
+                        <p class="text-secondary m-0">Temukan semua koleksi merchandise favoritmu.</p>
+                    </div>
+                    <button class="btn btn-success admin-only d-none" onclick="showAddProductModal()">
+                        <i class="bi bi-plus-circle me-2"></i>Tambah Produk
+                    </button>
+                </div>
+
+                <!-- Category Filter Pills -->
+                <div class="mb-4 overflow-auto" data-aos="fade-up">
+                    <div class="d-flex flex-nowrap gap-2 pb-2" id="categoryFilter">
+                        <button class="btn btn-outline-primary rounded-pill px-4 category-btn active" data-category="0">
+                            <i class="bi bi-grid-3x3-gap me-1"></i>Semua
+                        </button>
+                        <!-- Categories will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Search & Filter -->
+                <div class="row mb-4 g-3" data-aos="fade-up">
+                    <div class="col-12 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i
+                                    class="bi bi-search"></i></span>
+                            <input type="text" id="searchInput" class="form-control border-secondary text-white"
+                                placeholder="Cari produk...">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <select id="sortSelect" class="form-select border-secondary text-white">
+                            <option value="newest">Terbaru</option>
+                            <option value="bestseller">Terlaris</option>
+                            <option value="price_low">Harga Terendah</option>
+                            <option value="price_high">Harga Tertinggi</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="text-muted small pt-2" id="productCount">Memuat produk...</div>
+                    </div>
+                </div>
+
+                <div id="product-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4 mb-5"
+                    data-aos="fade-up" data-aos-delay="200">
+                    <div class="col-12 text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="loginForm">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Selamat Datang Kembali</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-4">
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i
+                                    class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control border-secondary text-white" name="email"
+                                placeholder="nama@email.com" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i
+                                    class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control border-secondary text-white" name="password"
+                                placeholder="******" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">Masuk
+                        Sekarang</button>
+                    <div class="text-center mt-3">
+                        <span class="text-muted small">Belum punya akun?</span> <a href="register.html"
+                            class="text-primary text-decoration-none fw-bold">Daftar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartDrawer">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title fw-bold"><i class="bi bi-bag me-2"></i>Keranjang Belanja</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div id="cart-items" class="list-group mb-3 flex-grow-1 overflow-auto">
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-cart-x fs-1 mb-2"></i>
+                    <p>Keranjang kosong</p>
+                </div>
+            </div>
+            <div class="mt-auto border-top border-secondary pt-3">
+                <div class="d-flex justify-content-between mb-3 fs-5 fw-bold">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-primary">Rp 0</span>
+                </div>
+                <button onclick="window.location.href='checkout.html'"
+                    class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-lg">
+                    Checkout Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin FAB -->
+    <div id="adminFab" class="position-fixed bottom-0 end-0 p-3 p-md-4" style="z-index: 1050; display: none;">
+        <button class="btn btn-success btn-lg rounded-circle shadow-lg" onclick="showAddProductModal()"
+            style="width: 56px; height: 56px;">
+            <i class="bi bi-plus-lg"></i>
+        </button>
+    </div>
+
+    <!-- Modal Add Product -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <form class="modal-content" id="addProductForm">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Tambah Produk Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" name="category_id" id="addCategorySelect">
+                                    <option value="">-- Pilih Kategori --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nama Produk <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea class="form-control" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="price" required>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Stok <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="stock" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Gambar Produk</label>
+                                <div class="btn-group w-100 mb-2" role="group">
+                                    <input type="radio" class="btn-check" name="image_source" id="imgSourceUrl"
+                                        value="url" checked onchange="toggleImageInput('url')">
+                                    <label class="btn btn-outline-secondary" for="imgSourceUrl">URL Gambar</label>
+
+                                    <input type="radio" class="btn-check" name="image_source" id="imgSourceFile"
+                                        value="file" onchange="toggleImageInput('file')">
+                                    <label class="btn btn-outline-secondary" for="imgSourceFile">Upload File</label>
+                                </div>
+
+                                <div id="inputUrl">
+                                    <input type="text" class="form-control" name="image_url" placeholder="https://...">
+                                </div>
+                                <div id="inputFile" style="display:none;">
+                                    <input type="file" class="form-control" name="image_file" accept="image/*">
+                                    <small class="text-muted">Format: JPG, PNG, WEBP (Max 2MB)</small>
+                                </div>
+                            </div>
+                            <script>
+                                function toggleImageInput(type) {
+                                    if (type === 'url') {
+                                        document.getElementById('inputUrl').style.display = 'block';
+                                        document.getElementById('inputFile').style.display = 'none';
+                                    } else {
+                                        document.getElementById('inputUrl').style.display = 'none';
+                                        document.getElementById('inputFile').style.display = 'block';
+                                    }
+                                }
+                            </script>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark border-secondary h-100">
+                                <div class="card-header border-secondary">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="hasVariants"
+                                            onchange="toggleVariantFields()">
+                                        <label class="form-check-label" for="hasVariants">
+                                            <i class="bi bi-layers me-1"></i>Produk memiliki varian
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="variantFields" style="display: none;">
+                                    <p class="text-muted small">Ketik varian, pisahkan dengan koma:</p>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small">Ukuran</label>
+                                        <input type="text" class="form-control form-control-sm" id="variantSizes"
+                                            placeholder="S, M, L, XL, XXL">
+                                        <small class="text-muted">Contoh: S, M, L, XL</small>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small">Warna</label>
+                                        <input type="text" class="form-control form-control-sm" id="variantColors"
+                                            placeholder="Hitam, Putih, Navy">
+                                        <small class="text-muted">Contoh: Hitam, Putih, Merah</small>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small">Stok per Varian</label>
+                                        <input type="number" class="form-control form-control-sm" id="variantStock"
+                                            value="10" min="0">
+                                    </div>
+
+                                    <div class="alert alert-info py-2 small mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Varian dibuat untuk setiap kombinasi ukuran × warna
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal Edit Product -->
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <form class="modal-content" id="editProductForm">
+                <input type="hidden" name="id">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Edit Produk</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" name="category_id" id="editCategorySelect">
+                                    <option value="">-- Pilih Kategori --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nama Produk</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea class="form-control" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Harga (Rp)</label>
+                                    <input type="number" class="form-control" name="price" required>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Stok Base</label>
+                                    <input type="number" class="form-control" name="stock" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">URL Gambar</label>
+                                <input type="text" class="form-control" name="image_url">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-dark border-secondary h-100">
+                                <div
+                                    class="card-header border-secondary d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-layers me-1"></i>Varian Produk</span>
+                                    <span class="badge bg-primary" id="editVariantCount">0</span>
+                                </div>
+                                <div class="card-body" style="max-height: 250px; overflow-y: auto;">
+                                    <div id="editVariantList">
+                                        <p class="text-muted small text-center">Loading...</p>
+                                    </div>
+                                </div>
+                                <div class="card-footer border-secondary">
+                                    <p class="text-muted small mb-2">Tambah varian baru (pisahkan dengan koma):</p>
+                                    <div class="row g-2 mb-2">
+                                        <div class="col-6">
+                                            <input type="text" class="form-control form-control-sm" id="editNewSizes"
+                                                placeholder="Ukuran: S, M, L">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control form-control-sm" id="editNewColors"
+                                                placeholder="Warna: Hitam, Putih">
+                                        </div>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <input type="number" class="form-control form-control-sm" id="editNewStock"
+                                                placeholder="Stok" value="10" min="0">
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-success btn-sm w-100"
+                                                onclick="addNewVariantsFromEdit()">
+                                                <i class="bi bi-plus"></i> Tambah
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Update Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let currentCategory = 0;
+        let currentSort = 'newest';
+        let allCategories = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ duration: 800, once: true });
+
+            // Load categories first
+            loadCategories();
+
+            // Parse URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            currentSort = urlParams.get('sort') || 'newest';
+            currentCategory = parseInt(urlParams.get('category')) || 0;
+
+            document.getElementById('sortSelect').value = currentSort;
+
+            // Load products
+            loadProductsWithCategory();
+
+            // Setup category filter clicks
+            document.getElementById('categoryFilter').addEventListener('click', (e) => {
+                const btn = e.target.closest('.category-btn');
+                if (!btn) return;
+
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                currentCategory = parseInt(btn.dataset.category);
+                loadProductsWithCategory();
+            });
+
+            // Setup sort change
+            document.getElementById('sortSelect').addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                loadProductsWithCategory();
+            });
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                filterDisplayedProducts(term);
+            });
+        });
+
+        function loadCategories() {
+            fetchJson(`${apiBase}/get_categories.php`)
+                .then(categories => {
+                    allCategories = categories;
+                    const container = document.getElementById('categoryFilter');
+
+                    // Keep the "Semua" button and add category buttons
+                    let html = `
+                        <button class="btn btn-outline-primary rounded-pill px-4 category-btn ${currentCategory === 0 ? 'active' : ''}" data-category="0">
+                            <i class="bi bi-grid-3x3-gap me-1"></i>Semua
+                        </button>
+                    `;
+
+                    categories.forEach(cat => {
+                        html += `
+                            <button class="btn btn-outline-primary rounded-pill px-3 category-btn ${currentCategory === cat.id ? 'active' : ''}" 
+                                    data-category="${cat.id}">
+                                <i class="${cat.icon || 'bi bi-tag'} me-1"></i>${escapeHtml(cat.name)}
+                                <span class="badge bg-secondary ms-1">${cat.product_count}</span>
+                            </button>
+                        `;
+                    });
+
+                    container.innerHTML = html;
+
+                    // Populate category selects in add/edit modals
+                    const addSelect = document.getElementById('addCategorySelect');
+                    const editSelect = document.getElementById('editCategorySelect');
+
+                    let optionsHtml = '<option value="">-- Pilih Kategori --</option>';
+                    categories.forEach(cat => {
+                        optionsHtml += `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`;
+                    });
+
+                    if (addSelect) addSelect.innerHTML = optionsHtml;
+                    if (editSelect) editSelect.innerHTML = optionsHtml;
+                })
+                .catch(err => {
+                    console.log('Categories not loaded (table may not exist yet)');
+                });
+        }
+
+        function loadProductsWithCategory() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary"></div></div>';
+
+            let url = `${apiBase}/get_products.php?sort=${currentSort}`;
+            if (currentCategory > 0) {
+                url += `&category=${currentCategory}`;
+            }
+
+            fetchJson(url)
+                .then(products => {
+                    allProducts = products;
+                    renderProductGridWithCategory(grid, products);
+
+                    // Update product count
+                    const countEl = document.getElementById('productCount');
+                    if (countEl) {
+                        countEl.textContent = `${products.length} produk ditemukan`;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    grid.innerHTML = '<div class="col-12 text-center text-danger">Gagal memuat produk.</div>';
+                });
+        }
+
+        function renderProductGridWithCategory(container, products) {
+            if (!Array.isArray(products) || !products.length) {
+                container.innerHTML = `
+                    <div class="col-12 text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-1 mb-3 d-block"></i>
+                        <h5>Tidak ada produk</h5>
+                        <p class="mb-0">Coba pilih kategori lain atau ubah filter.</p>
+                    </div>`;
+                return;
+            }
+
+            const user = getUser();
+            const isAdmin = user && user.role === 'admin';
+
+            let html = '';
+            if (isAdmin) {
+                // Button moved to header
+                document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('d-none'));
+            }
+
+            html += products.map(p => `
+                <div class="col-md-3 mb-4">
+                    <div class="card product-card">
+                        <a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit">
+                            <img src="${getProductImage(p.image_url, p.name)}" class="card-img-top" alt="${escapeHtml(p.name)}">
+                            <div class="card-body">
+                                ${p.category_name ? `<span class="badge bg-secondary mb-2">${escapeHtml(p.category_name)}</span>` : ''}
+                                <h5 class="card-title">${escapeHtml(p.name)}</h5>
+                                <p class="text-info fw-bold mb-1">Rp ${Number(p.price).toLocaleString()}</p>
+                                <small class="d-block mb-2 text-muted">Stok: ${p.stock}</small>
+                            </div>
+                        </a>
+                        <div class="p-3 pt-0">
+                            ${isAdmin ? `
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-warning w-50" onclick="editProduct(${p.id})">Edit</button>
+                                    <button class="btn btn-sm btn-danger w-50" onclick="deleteProduct(${p.id})">Hapus</button>
+                                </div>
+                            ` : `
+                                <button class="btn btn-sm btn-primary add-to-cart w-100"
+                                    data-id="${p.id}" data-name="${escapeAttr(p.name)}" data-price="${p.price}" data-image="${escapeAttr(p.image_url)}">
+                                    <i class="bi bi-cart-plus me-1"></i> Tambah
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function filterDisplayedProducts(term) {
+            if (!allProducts) return;
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+            renderProductGridWithCategory(document.getElementById('product-grid'), filtered);
+
+            const countEl = document.getElementById('productCount');
+            if (countEl) {
+                countEl.textContent = `${filtered.length} produk ditemukan`;
+            }
+        }
+    </script>
+</body>
+
+</html>

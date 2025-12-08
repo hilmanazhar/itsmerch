@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profil Saya - myITS Merchandise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--its-blue), var(--its-blue-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(0, 123, 192, 0.3);
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.8), rgba(20, 20, 20, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-box {
+            background: rgba(0, 123, 192, 0.1);
+            border: 1px solid rgba(0, 123, 192, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--its-blue-light);
+        }
+
+        .address-card {
+            transition: all 0.2s;
+        }
+
+        .address-card:hover {
+            border-color: var(--its-blue) !important;
+        }
+
+        .address-card.primary {
+            border-left: 4px solid var(--its-blue) !important;
+        }
+
+        .nav-tabs-custom .nav-link {
+            color: #adb5bd;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            background: var(--its-dark);
+            color: #fff;
+            border-bottom: 3px solid var(--its-blue);
+        }
+
+        .nav-tabs-custom .nav-link:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo-mini">Profil Saya</div>
+        <div style="width: 40px;"></div>
+    </header>
+
+    <div class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 sidebar d-flex flex-column">
+                <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/images/logo.png" alt="Logo" style="width: 40px; height: 40px;">
+                    <h2 style="margin: 0; font-size: 1.2rem;">my<span style="color:#9b59b6">ITS</span><br>Merch</h2>
+                </div>
+                <ul class="nav flex-column mb-auto nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalog.html"><i class="bi bi-box"></i> Katalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="cartButton" data-bs-toggle="offcanvas"
+                            data-bs-target="#cartDrawer"><i class="bi bi-cart"></i> Keranjang <span
+                                class="badge ms-2 rounded-pill" id="cart-count">0</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="transactions.html"><i class="bi bi-receipt"></i> Transaksi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="profile.html"><i class="bi bi-person"></i> Profil</a>
+                    </li>
+                </ul>
+                <div class="mt-auto p-3" id="userBadge"></div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 px-3 px-md-4">
+                <div class="py-4">
+                    <h2 class="fw-bold text-white mb-4">
+                        <i class="bi bi-person-circle me-2"></i>Profil Saya
+                    </h2>
+
+                    <div class="row g-4">
+                        <!-- Left Column - Profile Info -->
+                        <div class="col-12 col-lg-4">
+                            <div class="card profile-card mb-4">
+                                <div class="card-body text-center py-4">
+                                    <div class="profile-avatar" id="avatarInitial">?</div>
+                                    <h4 class="fw-bold text-white mb-1" id="profileName">Loading...</h4>
+                                    <p class="text-muted mb-3" id="profileEmail">-</p>
+                                    <span class="badge bg-primary px-3 py-2" id="profileRole">User</span>
+                                </div>
+                            </div>
+
+                            <!-- Quick Stats -->
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="stat-box">
+                                        <div class="stat-number" id="statOrders">0</div>
+                                        <small class="text-muted">Pesanan</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-box">
+                                        <div class="stat-number" id="statAddresses">0</div>
+                                        <small class="text-muted">Alamat</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column - Tabs -->
+                        <div class="col-12 col-lg-8">
+                            <ul class="nav nav-tabs nav-tabs-custom mb-0" id="profileTabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#" data-tab="info">
+                                        <i class="bi bi-person me-1"></i>Informasi
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" data-tab="addresses">
+                                        <i class="bi bi-geo-alt me-1"></i>Alamat
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" data-tab="security">
+                                        <i class="bi bi-shield-lock me-1"></i>Keamanan
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="card border-top-0" style="border-radius: 0 0 12px 12px;">
+                                <div class="card-body p-4">
+                                    <!-- Info Tab -->
+                                    <div id="tabInfo" class="tab-content-item">
+                                        <h5 class="fw-bold mb-4">Informasi Pribadi</h5>
+                                        <form id="profileForm">
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <label class="form-label">Nama Lengkap</label>
+                                                    <input type="text" class="form-control" name="name" id="inputName"
+                                                        required>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" name="email"
+                                                        id="inputEmail" readonly>
+                                                    <small class="text-muted">Email tidak dapat diubah</small>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label">No. Telepon</label>
+                                                    <input type="tel" class="form-control" name="phone" id="inputPhone"
+                                                        placeholder="08xxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                            <div class="mt-4">
+                                                <button type="submit" class="btn btn-primary px-4">
+                                                    <i class="bi bi-check-lg me-2"></i>Simpan Perubahan
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Addresses Tab -->
+                                    <div id="tabAddresses" class="tab-content-item" style="display: none;">
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <h5 class="fw-bold mb-0">Daftar Alamat</h5>
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#addAddressModal">
+                                                <i class="bi bi-plus me-1"></i>Tambah Alamat
+                                            </button>
+                                        </div>
+                                        <div id="addressList">
+                                            <div class="text-center py-4">
+                                                <div class="spinner-border text-primary"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Security Tab -->
+                                    <div id="tabSecurity" class="tab-content-item" style="display: none;">
+                                        <h5 class="fw-bold mb-4">Ubah Password</h5>
+                                        <form id="passwordForm">
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <label class="form-label">Password Lama</label>
+                                                    <input type="password" class="form-control" name="old_password"
+                                                        required>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label">Password Baru</label>
+                                                    <input type="password" class="form-control" name="new_password"
+                                                        minlength="6" required>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label">Konfirmasi Password Baru</label>
+                                                    <input type="password" class="form-control" name="confirm_password"
+                                                        required>
+                                                </div>
+                                            </div>
+                                            <div class="mt-4">
+                                                <button type="submit" class="btn btn-warning px-4">
+                                                    <i class="bi bi-key me-2"></i>Ubah Password
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Address Modal -->
+    <div class="modal fade" id="addAddressModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="addAddressForm">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Tambah Alamat Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Label Alamat</label>
+                        <input type="text" class="form-control" name="label" placeholder="Rumah / Kantor" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nama Penerima</label>
+                        <input type="text" class="form-control" name="recipient_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">No. Telepon</label>
+                        <input type="tel" class="form-control" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cari Kota/Kecamatan</label>
+                        <input type="text" class="form-control" id="destinationSearch"
+                            placeholder="Ketik nama kota... (min 3 huruf)" autocomplete="off">
+                        <div id="destinationResults" class="list-group position-absolute w-100 shadow-sm"
+                            style="z-index: 1050; max-height: 200px; overflow-y: auto;"></div>
+                        <input type="hidden" name="destination_id" id="destinationId">
+                        <input type="hidden" name="destination_label" id="destinationLabel">
+                        <div id="selectedDestination" class="mt-2 small text-success d-none">
+                            <i class="bi bi-check-circle me-1"></i><span></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Alamat Lengkap</label>
+                        <textarea class="form-control" name="address_detail" rows="3"
+                            placeholder="Nama jalan, nomor rumah, RT/RW, dll." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Alamat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartDrawer">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title fw-bold"><i class="bi bi-bag me-2"></i>Keranjang Belanja</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div id="cart-items" class="list-group mb-3 flex-grow-1 overflow-auto">
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-cart-x fs-1 mb-2"></i>
+                    <p>Keranjang kosong</p>
+                </div>
+            </div>
+            <div class="mt-auto border-top border-secondary pt-3">
+                <div class="d-flex justify-content-between mb-3 fs-5 fw-bold">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-primary">Rp 0</span>
+                </div>
+                <button onclick="window.location.href='checkout.html'"
+                    class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-lg">
+                    Checkout Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let currentUser = null;
+        let searchTimeout = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = getUser();
+            if (!currentUser) {
+                alert('Silakan login terlebih dahulu');
+                window.location.href = 'index.html';
+                return;
+            }
+            if (currentUser.role === 'admin') {
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            showUserState();
+            loadProfile();
+            setupTabs();
+            setupForms();
+            setupDestinationSearch();
+        });
+
+        function loadProfile() {
+            // Set profile info
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileRole').textContent = currentUser.role === 'admin' ? 'Admin' : 'Member';
+
+            // Set avatar initial
+            const initials = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('avatarInitial').textContent = initials;
+
+            // Fill form
+            document.getElementById('inputName').value = currentUser.name;
+            document.getElementById('inputEmail').value = currentUser.email;
+            document.getElementById('inputPhone').value = currentUser.phone || '';
+
+            // Load stats
+            loadStats();
+            loadAddresses();
+        }
+
+        function loadStats() {
+            // Load order count
+            fetchJson(`${apiBase}/get_orders.php?user_id=${currentUser.id}`)
+                .then(orders => {
+                    document.getElementById('statOrders').textContent = orders.length;
+                });
+
+            // Load address count
+            fetchJson(`${apiBase}/addresses.php?user_id=${currentUser.id}`)
+                .then(addresses => {
+                    document.getElementById('statAddresses').textContent = addresses.length;
+                });
+        }
+
+        function loadAddresses() {
+            fetchJson(`${apiBase}/addresses.php?user_id=${currentUser.id}`)
+                .then(addresses => {
+                    const container = document.getElementById('addressList');
+                    if (!addresses || addresses.length === 0) {
+                        container.innerHTML = `
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-geo-alt fs-1 mb-2"></i>
+                                <p>Belum ada alamat tersimpan</p>
+                            </div>`;
+                        return;
+                    }
+
+                    container.innerHTML = addresses.map((addr, i) => `
+                        <div class="card bg-dark border-secondary mb-3 address-card ${i === 0 ? 'primary' : ''}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="badge bg-secondary mb-2">${escapeHtml(addr.label)}</span>
+                                        ${i === 0 ? '<span class="badge bg-primary ms-1">Utama</span>' : ''}
+                                        <h6 class="fw-bold text-white mb-1">${escapeHtml(addr.recipient_name)}</h6>
+                                        <p class="text-muted small mb-1">${escapeHtml(addr.phone)}</p>
+                                        <p class="text-muted small mb-0">${escapeHtml(addr.address_detail)}</p>
+                                    </div>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteAddress(${addr.id})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function setupTabs() {
+            document.querySelectorAll('#profileTabs .nav-link').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('#profileTabs .nav-link').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    const tabName = tab.dataset.tab;
+                    document.querySelectorAll('.tab-content-item').forEach(c => c.style.display = 'none');
+
+                    if (tabName === 'info') document.getElementById('tabInfo').style.display = 'block';
+                    else if (tabName === 'addresses') document.getElementById('tabAddresses').style.display = 'block';
+                    else if (tabName === 'security') document.getElementById('tabSecurity').style.display = 'block';
+                });
+            });
+        }
+
+        function setupForms() {
+            // Profile form
+            document.getElementById('profileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+                data.user_id = currentUser.id;
+
+                fetchJson(`${apiBase}/update_profile.php`, { method: 'POST', body: data })
+                    .then(res => {
+                        if (res.success) {
+                            // Update local storage
+                            currentUser.name = data.name;
+                            currentUser.phone = data.phone;
+                            localStorage.setItem('user', JSON.stringify(currentUser));
+
+                            showToast('Profil berhasil diperbarui');
+                            loadProfile();
+                        } else {
+                            alert('Gagal memperbarui profil: ' + (res.error || res.message));
+                        }
+                    });
+            });
+
+            // Password form
+            document.getElementById('passwordForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+
+                if (data.new_password !== data.confirm_password) {
+                    alert('Konfirmasi password tidak cocok');
+                    return;
+                }
+
+                data.user_id = currentUser.id;
+
+                fetchJson(`${apiBase}/update_profile.php`, { method: 'POST', body: data })
+                    .then(res => {
+                        if (res.success) {
+                            showToast('Password berhasil diubah');
+                            e.target.reset();
+                        } else {
+                            alert('Gagal mengubah password: ' + (res.error || res.message));
+                        }
+                    });
+            });
+
+            // Address form
+            document.getElementById('addAddressForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+                data.user_id = currentUser.id;
+
+                if (!data.destination_id) {
+                    alert('Silakan pilih lokasi dari hasil pencarian');
+                    return;
+                }
+
+                fetchJson(`${apiBase}/addresses.php`, { method: 'POST', body: data })
+                    .then(res => {
+                        if (res.success) {
+                            bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
+                            e.target.reset();
+                            document.getElementById('selectedDestination').classList.add('d-none');
+                            loadAddresses();
+                            loadStats();
+                            showToast('Alamat berhasil ditambahkan');
+                        } else {
+                            alert('Gagal menambah alamat: ' + (res.message || ''));
+                        }
+                    });
+            });
+        }
+
+        function setupDestinationSearch() {
+            const searchInput = document.getElementById('destinationSearch');
+            const resultsContainer = document.getElementById('destinationResults');
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+
+                if (searchTimeout) clearTimeout(searchTimeout);
+
+                if (query.length < 3) {
+                    resultsContainer.innerHTML = '';
+                    return;
+                }
+
+                searchTimeout = setTimeout(() => {
+                    fetchJson(`${apiBase}/search_destination.php?search=${encodeURIComponent(query)}&limit=10`)
+                        .then(destinations => {
+                            if (destinations.length === 0) {
+                                resultsContainer.innerHTML = '<div class="list-group-item text-muted">Tidak ditemukan</div>';
+                                return;
+                            }
+                            resultsContainer.innerHTML = destinations.map(d => `
+                                <button type="button" class="list-group-item list-group-item-action" 
+                                        onclick="selectDestination('${d.id}', '${escapeHtml(d.label)}')">
+                                    ${escapeHtml(d.label)}
+                                </button>
+                            `).join('');
+                        })
+                        .catch(err => {
+                            resultsContainer.innerHTML = '<div class="list-group-item text-danger">Error loading</div>';
+                        });
+                }, 300);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                    resultsContainer.innerHTML = '';
+                }
+            });
+        }
+
+        function selectDestination(id, label) {
+            document.getElementById('destinationId').value = id;
+            document.getElementById('destinationLabel').value = label;
+            document.getElementById('destinationSearch').value = label;
+            document.getElementById('destinationResults').innerHTML = '';
+
+            const selectedDiv = document.getElementById('selectedDestination');
+            selectedDiv.querySelector('span').textContent = label;
+            selectedDiv.classList.remove('d-none');
+        }
+
+        function deleteAddress(id) {
+            if (!confirm('Hapus alamat ini?')) return;
+
+            fetchJson(`${apiBase}/delete_address.php`, {
+                method: 'POST',
+                body: { address_id: id, user_id: currentUser.id }
+            }).then(res => {
+                if (res.success) {
+                    showToast('Alamat berhasil dihapus');
+                    loadAddresses();
+                    loadStats();
+                } else {
+                    alert('Gagal menghapus alamat');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

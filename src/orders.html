@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kelola Pesanan - myITS Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .order-status-badge {
+            font-size: 0.8rem;
+            padding: 0.4em 0.8em;
+        }
+
+        .status-unpaid {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: #000;
+        }
+
+        .status-packing {
+            background: linear-gradient(135deg, #17a2b8, #0dcaf0);
+        }
+
+        .status-shipped {
+            background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+
+        .order-card {
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .order-card:hover {
+            transform: translateX(5px);
+        }
+
+        .order-card.unpaid {
+            border-left-color: #ffc107;
+        }
+
+        .order-card.packing {
+            border-left-color: #17a2b8;
+        }
+
+        .order-card.shipped {
+            border-left-color: #6f42c1;
+        }
+
+        .order-card.completed {
+            border-left-color: #28a745;
+        }
+
+        .order-card.cancelled {
+            border-left-color: #6c757d;
+        }
+
+        .action-btn {
+            min-width: 100px;
+        }
+
+        .order-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .order-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #444;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #444;
+        }
+
+        .timeline-item.active::before {
+            background: #0d6efd;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.3);
+        }
+
+        .timeline-item.completed::before {
+            background: #28a745;
+        }
+
+        .stats-card {
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .product-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .filter-badge {
+            position: relative;
+        }
+
+        .filter-badge .count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo-mini">Kelola Pesanan</div>
+        <button onclick="loadOrders()" class="btn btn-sm btn-outline-info">
+            <i class="bi bi-arrow-clockwise"></i>
+        </button>
+    </header>
+
+    <div class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 sidebar d-flex flex-column">
+                <div class="logo">
+                    <h2>my<span style="color:#007BC0">ITS</span><br>Admin</h2>
+                </div>
+                <ul class="nav flex-column mb-auto nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Toko</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalog.html"><i class="bi bi-box"></i> Katalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html"><i class="bi bi-graph-up"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="bi bi-clipboard-check"></i> Pesanan</a>
+                    </li>
+                </ul>
+                <div class="mt-auto p-3">
+                    <button onclick="logout()" class="btn btn-outline-danger w-100">Logout</button>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 px-3 px-md-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 pt-4">
+                    <div>
+                        <h2 class="fw-bold text-white mb-1">
+                            <i class="bi bi-clipboard-check me-2"></i>Kelola Pesanan
+                        </h2>
+                        <p class="text-muted mb-0 d-none d-md-block">
+                            <span id="lastUpdate">-</span> • Auto-refresh setiap 15 detik
+                        </p>
+                    </div>
+                    <button onclick="loadOrders()" class="btn btn-outline-info">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                    </button>
+                </div>
+
+                <!-- Order Stats -->
+                <div class="row g-3 mb-4" id="orderStats">
+                    <div class="col-6 col-md">
+                        <div class="stats-card bg-warning bg-opacity-25 text-warning">
+                            <div class="stats-number" id="statUnpaid">0</div>
+                            <small>Belum Bayar</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md">
+                        <div class="stats-card bg-info bg-opacity-25 text-info">
+                            <div class="stats-number" id="statPacking">0</div>
+                            <small>Dikemas</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md">
+                        <div class="stats-card bg-purple bg-opacity-25" style="color:#9b59b6;">
+                            <div class="stats-number" id="statShipped">0</div>
+                            <small>Dikirim</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md">
+                        <div class="stats-card bg-success bg-opacity-25 text-success">
+                            <div class="stats-number" id="statCompleted">0</div>
+                            <small>Selesai</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="mb-4 overflow-auto">
+                    <ul class="nav nav-pills flex-nowrap gap-2" id="orderTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active filter-badge" href="#" data-filter="all">
+                                Semua <span class="badge bg-secondary count" id="countAll">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link filter-badge" href="#" data-filter="unpaid">
+                                <i class="bi bi-clock me-1"></i>Belum Bayar
+                                <span class="badge bg-warning text-dark count" id="countUnpaid">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link filter-badge" href="#" data-filter="packing">
+                                <i class="bi bi-box-seam me-1"></i>Dikemas
+                                <span class="badge bg-info count" id="countPacking">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link filter-badge" href="#" data-filter="shipped">
+                                <i class="bi bi-truck me-1"></i>Dikirim
+                                <span class="badge bg-purple count" id="countShipped"
+                                    style="background:#6f42c1!important;">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link filter-badge" href="#" data-filter="completed">
+                                <i class="bi bi-check-circle me-1"></i>Selesai
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link filter-badge" href="#" data-filter="cancelled">
+                                <i class="bi bi-x-circle me-1"></i>Batal
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Orders List -->
+                <div id="ordersContainer">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-bag me-2"></i>Detail Pesanan #<span id="modalOrderId"></span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalBody">Loading...</div>
+                <div class="modal-footer border-0" id="modalFooter"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input Resi Modal -->
+    <div class="modal fade" id="resiModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-truck me-2"></i>Input No. Resi
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="resiOrderId">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Nomor Resi Pengiriman</label>
+                        <input type="text" class="form-control form-control-lg" id="resiNumber"
+                            placeholder="Masukkan nomor resi...">
+                    </div>
+                    <div class="alert alert-info d-flex gap-2">
+                        <i class="bi bi-info-circle"></i>
+                        <small>Masukkan nomor resi dari kurir. Pesanan akan otomatis berubah status menjadi
+                            "Dikirim".</small>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="submitResi()">
+                        <i class="bi bi-check me-1"></i>Kirim Pesanan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let allOrders = [];
+        let currentFilter = 'all';
+        let autoRefresh = null;
+
+        // Status mapping
+        const STATUS_MAP = {
+            'unpaid': { label: 'Belum Bayar', class: 'status-unpaid', icon: 'bi-clock' },
+            'packing': { label: 'Dikemas', class: 'status-packing', icon: 'bi-box-seam' },
+            'shipped': { label: 'Dikirim', class: 'status-shipped', icon: 'bi-truck' },
+            'completed': { label: 'Selesai', class: 'status-completed', icon: 'bi-check-circle' },
+            'cancelled': { label: 'Dibatalkan', class: 'status-cancelled', icon: 'bi-x-circle' }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getUser();
+            if (!user || user.role !== 'admin') {
+                alert('Akses ditolak');
+                window.location.href = 'index.html';
+                return;
+            }
+            loadOrders();
+            autoRefresh = setInterval(loadOrders, 15000);
+
+            document.querySelectorAll('#orderTabs .nav-link').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('#orderTabs .nav-link').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.filter;
+                    renderOrders();
+                });
+            });
+        });
+
+        function loadOrders() {
+            fetchJson(`${apiBase}/get_orders.php?admin=1`)
+                .then(data => {
+                    allOrders = data.map(o => ({
+                        ...o,
+                        displayStatus: getDisplayStatus(o)
+                    }));
+                    updateStats();
+                    renderOrders();
+                    document.getElementById('lastUpdate').textContent =
+                        'Update: ' + new Date().toLocaleTimeString('id-ID');
+                });
+        }
+
+        function getDisplayStatus(order) {
+            if (order.status === 'cancelled') return 'cancelled';
+            if (order.payment_status !== 'paid') return 'unpaid';
+            if (order.status === 'processing') return 'packing';
+            if (order.status === 'shipped') return 'shipped';
+            if (order.status === 'completed') return 'completed';
+            return 'unpaid';
+        }
+
+        function updateStats() {
+            const counts = {
+                unpaid: 0, packing: 0, shipped: 0, completed: 0, cancelled: 0
+            };
+            allOrders.forEach(o => counts[o.displayStatus]++);
+
+            document.getElementById('statUnpaid').textContent = counts.unpaid;
+            document.getElementById('statPacking').textContent = counts.packing;
+            document.getElementById('statShipped').textContent = counts.shipped;
+            document.getElementById('statCompleted').textContent = counts.completed;
+            document.getElementById('countAll').textContent = allOrders.length;
+            document.getElementById('countUnpaid').textContent = counts.unpaid;
+            document.getElementById('countPacking').textContent = counts.packing;
+            document.getElementById('countShipped').textContent = counts.shipped;
+        }
+
+        function filterOrders() {
+            if (currentFilter === 'all') return allOrders;
+            return allOrders.filter(o => o.displayStatus === currentFilter);
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            const filtered = filterOrders();
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                        <p class="mt-3 text-muted">Tidak ada pesanan</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(order => {
+                const status = STATUS_MAP[order.displayStatus];
+                const date = new Date(order.order_date).toLocaleDateString('id-ID', {
+                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                let actionBtn = '';
+                if (order.displayStatus === 'unpaid') {
+                    actionBtn = `<span class="text-warning"><i class="bi bi-hourglass-split me-1"></i>Menunggu Bayar</span>`;
+                } else if (order.displayStatus === 'packing') {
+                    actionBtn = `<button class="btn btn-sm btn-primary action-btn" onclick="showResiModal(${order.id})">
+                        <i class="bi bi-truck me-1"></i>Kirim
+                    </button>`;
+                } else if (order.displayStatus === 'shipped') {
+                    actionBtn = `<button class="btn btn-sm btn-success action-btn" onclick="completeOrder(${order.id})">
+                        <i class="bi bi-check-lg me-1"></i>Selesaikan
+                    </button>`;
+                }
+
+                return `
+                    <div class="card bg-dark border-secondary mb-3 order-card ${order.displayStatus}">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="bg-primary bg-opacity-25 rounded p-2 d-none d-sm-block">
+                                            <i class="bi ${status.icon} fs-4 text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                                <strong class="text-white">#${order.id}</strong>
+                                                <span class="badge ${status.class} order-status-badge">${status.label}</span>
+                                            </div>
+                                            <small class="text-muted d-block">${order.user_name}</small>
+                                            <small class="text-muted">${date}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4 col-md-2">
+                                    <small class="text-muted d-block">Total</small>
+                                    <strong class="text-white">Rp ${Number(order.total_amount).toLocaleString()}</strong>
+                                </div>
+                                <div class="col-4 col-md-2">
+                                    <small class="text-muted d-block">Kurir</small>
+                                    <span class="text-uppercase">${order.shipping_courier || '-'}</span>
+                                </div>
+                                <div class="col-4 col-md-2 text-center">
+                                    ${order.tracking_number ?
+                        `<small class="text-muted d-block">Resi</small>
+                                        <span class="text-info">${order.tracking_number}</span>` :
+                        `<small class="text-muted">-</small>`}
+                                </div>
+                                <div class="col-12 col-md-2 text-end mt-3 mt-md-0">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button class="btn btn-sm btn-outline-info" onclick="viewOrder(${order.id})">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        ${actionBtn}
+                                        ${order.displayStatus !== 'completed' && order.displayStatus !== 'cancelled' ?
+                        `<button class="btn btn-sm btn-outline-danger" onclick="cancelOrder(${order.id})" title="Batalkan">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewOrder(orderId) {
+            const order = allOrders.find(o => o.id == orderId);
+            if (!order) return;
+
+            document.getElementById('modalOrderId').textContent = orderId;
+            const status = STATUS_MAP[order.displayStatus];
+
+            fetchJson(`${apiBase}/get_order_details.php?order_id=${orderId}`)
+                .then(items => {
+                    const date = new Date(order.order_date).toLocaleDateString('id-ID', {
+                        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+
+                    let timeline = `
+                        <div class="order-timeline mb-4">
+                            <div class="timeline-item ${order.displayStatus !== 'unpaid' ? 'completed' : 'active'}">
+                                <strong>Pesanan Dibuat</strong>
+                                <small class="text-muted d-block">${date}</small>
+                            </div>
+                            <div class="timeline-item ${['packing', 'shipped', 'completed'].includes(order.displayStatus) ? 'completed' : ''}">
+                                <strong>Pembayaran ${order.payment_status === 'paid' ? 'Diterima' : 'Menunggu'}</strong>
+                            </div>
+                            <div class="timeline-item ${['shipped', 'completed'].includes(order.displayStatus) ? 'completed' : (order.displayStatus === 'packing' ? 'active' : '')}">
+                                <strong>Dikemas</strong>
+                            </div>
+                            <div class="timeline-item ${order.displayStatus === 'completed' ? 'completed' : (order.displayStatus === 'shipped' ? 'active' : '')}">
+                                <strong>Dikirim</strong>
+                                ${order.tracking_number ? `<small class="text-info d-block">Resi: ${order.tracking_number}</small>` : ''}
+                            </div>
+                            <div class="timeline-item ${order.displayStatus === 'completed' ? 'completed' : ''}">
+                                <strong>Selesai</strong>
+                            </div>
+                        </div>
+                    `;
+
+                    let html = `
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="badge ${status.class} order-status-badge fs-6">${status.label}</span>
+                            <span class="text-muted">${date}</span>
+                        </div>
+                        
+                        ${timeline}
+                        
+                        <hr class="border-secondary">
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold"><i class="bi bi-person me-2"></i>Pelanggan</h6>
+                                <p class="mb-1">${escapeHtml(order.user_name)}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold"><i class="bi bi-truck me-2"></i>Pengiriman</h6>
+                                <p class="mb-1 text-uppercase">${order.shipping_courier || '-'}</p>
+                                <small class="text-muted">${escapeHtml(order.shipping_address || '-')}</small>
+                            </div>
+                        </div>
+                        
+                        <hr class="border-secondary">
+                        
+                        <h6 class="fw-bold mb-3"><i class="bi bi-bag me-2"></i>Produk</h6>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-sm">
+                                <tbody>
+                    `;
+
+                    let subtotal = 0;
+                    items.forEach(item => {
+                        const itemTotal = item.price * item.quantity;
+                        subtotal += itemTotal;
+                        html += `
+                            <tr>
+                                <td style="width:60px;">
+                                    <img src="${getProductImage(item.image_url, item.product_name)}" class="product-thumb">
+                                </td>
+                                <td>${escapeHtml(item.product_name)}</td>
+                                <td class="text-center">${item.quantity}x</td>
+                                <td class="text-end">Rp ${Number(itemTotal).toLocaleString()}</td>
+                            </tr>
+                        `;
+                    });
+
+                    const shipping = parseInt(order.shipping_cost) || 0;
+                    html += `
+                                </tbody>
+                                <tfoot>
+                                    <tr><td colspan="3" class="text-end">Subtotal</td><td class="text-end">Rp ${subtotal.toLocaleString()}</td></tr>
+                                    <tr><td colspan="3" class="text-end">Ongkir</td><td class="text-end">Rp ${shipping.toLocaleString()}</td></tr>
+                                    ${order.discount_amount > 0 ? `
+                                    <tr>
+                                        <td colspan="3" class="text-end text-danger">Diskon ${order.coupon_code ? `(${escapeHtml(order.coupon_code)})` : ''}</td>
+                                        <td class="text-end text-danger">- Rp ${Number(order.discount_amount).toLocaleString()}</td>
+                                    </tr>` : ''}
+                                    <tr class="table-active"><td colspan="3" class="text-end fw-bold">Total</td><td class="text-end fw-bold text-primary fs-5">Rp ${Number(order.total_amount).toLocaleString()}</td></tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    `;
+
+                    document.getElementById('modalBody').innerHTML = html;
+
+                    // Footer actions
+                    let footerHtml = '<button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>';
+                    if (order.displayStatus === 'packing') {
+                        footerHtml += `<button class="btn btn-primary" onclick="bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide(); showResiModal(${order.id});">
+                            <i class="bi bi-truck me-1"></i>Kirim Pesanan
+                        </button>`;
+                    } else if (order.displayStatus === 'shipped') {
+                        footerHtml += `<button class="btn btn-success" onclick="bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide(); completeOrder(${order.id});">
+                            <i class="bi bi-check-lg me-1"></i>Selesaikan
+                        </button>`;
+                    }
+                    document.getElementById('modalFooter').innerHTML = footerHtml;
+
+                    new bootstrap.Modal(document.getElementById('orderModal')).show();
+                });
+        }
+
+        function showResiModal(orderId) {
+            document.getElementById('resiOrderId').value = orderId;
+            document.getElementById('resiNumber').value = '';
+            new bootstrap.Modal(document.getElementById('resiModal')).show();
+        }
+
+        function submitResi() {
+            const orderId = document.getElementById('resiOrderId').value;
+            const resi = document.getElementById('resiNumber').value.trim();
+
+            if (!resi) {
+                alert('Masukkan nomor resi');
+                return;
+            }
+
+            fetchJson(`${apiBase}/update_order_status.php`, {
+                method: 'POST',
+                body: { order_id: orderId, status: 'shipped', tracking_number: resi }
+            }).then(res => {
+                if (res.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('resiModal')).hide();
+                    showToast('Pesanan berhasil dikirim!');
+                    loadOrders();
+                } else {
+                    alert('Gagal update: ' + res.message);
+                }
+            });
+        }
+
+        function completeOrder(orderId) {
+            if (!confirm('Tandai pesanan ini sebagai SELESAI?')) return;
+
+            fetchJson(`${apiBase}/update_order_status.php`, {
+                method: 'POST',
+                body: { order_id: orderId, status: 'completed' }
+            }).then(res => {
+                if (res.success) {
+                    showToast('Pesanan selesai!');
+                    loadOrders();
+                }
+            });
+        }
+
+        function cancelOrder(orderId) {
+            if (!confirm('Batalkan pesanan ini? Stock akan dikembalikan.')) return;
+
+            fetchJson(`${apiBase}/update_order_status.php`, {
+                method: 'POST',
+                body: { order_id: orderId, status: 'cancelled' }
+            }).then(res => {
+                if (res.success) {
+                    showToast('Pesanan dibatalkan');
+                    loadOrders();
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

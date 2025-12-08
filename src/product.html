@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Produk - myITS Merchandise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .star-rating .star {
+            cursor: pointer;
+            color: #adb5bd;
+            transition: color 0.2s;
+        }
+
+        .star-rating .star:hover,
+        .star-rating .star.active {
+            color: #ffc107;
+        }
+
+        .star-rating .star i {
+            transition: transform 0.1s;
+        }
+
+        .star-rating .star:hover i {
+            transform: scale(1.1);
+        }
+
+        .rating-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .rating-bar .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffc107, #ffca2c);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .review-card {
+            transition: all 0.2s;
+        }
+
+        .review-card:hover {
+            border-color: var(--its-blue) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo-mini">my<span>ITS</span> Merch</div>
+        <a href="#" class="cart-link" data-bs-toggle="offcanvas" data-bs-target="#cartDrawer">
+            <i class="bi bi-cart"></i>
+            <span class="badge rounded-pill bg-primary" id="mobile-cart-count">0</span>
+        </a>
+    </header>
+
+    <div class="mobile-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 sidebar d-flex flex-column">
+                <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/images/logo.png" alt="Logo" style="width: 40px; height: 40px;">
+                    <h2 style="margin: 0; font-size: 1.2rem;">my<span style="color:#9b59b6">ITS</span><br>Merch</h2>
+                </div>
+                <ul class="nav flex-column mb-auto nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalog.html"><i class="bi bi-box"></i> Katalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="cartButton" class="nav-link" href="#" data-bs-toggle="offcanvas"
+                            data-bs-target="#cartDrawer"><i class="bi bi-cart"></i> Keranjang <span
+                                class="badge ms-2 rounded-pill" id="cart-count">0</span></a>
+                    </li>
+                </ul>
+                <div class="mt-auto">
+                    <ul class="nav flex-column nav-pills">
+                        <li class="nav-item" id="loginNavItem">
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i
+                                    class="bi bi-box-arrow-in-right"></i> Login</a>
+                        </li>
+                    </ul>
+                    <div id="userBadge" class="mt-3 p-3 rounded bg-dark bg-opacity-50 text-center small fade-in"
+                        style="display:none;"></div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 px-3 px-md-4">
+                <div class="py-3 py-md-4">
+                    <a href="catalog.html" class="btn btn-outline-light btn-sm mb-3 mb-md-4">
+                        <i class="bi bi-arrow-left"></i> Kembali ke Katalog
+                    </a>
+
+                    <div id="product-detail" class="row g-4">
+                        <div class="col-12 text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Section -->
+                    <div class="mt-5" id="reviewsSection">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="fw-bold text-white mb-0">
+                                <i class="bi bi-star-fill text-warning me-2"></i>Ulasan Produk
+                            </h4>
+                            <button class="btn btn-outline-primary btn-sm rounded-pill" id="writeReviewBtn"
+                                onclick="showReviewForm()" style="display: none;">
+                                <i class="bi bi-pencil me-1"></i>Tulis Ulasan
+                            </button>
+                        </div>
+
+                        <!-- Rating Summary -->
+                        <div class="row g-4 mb-4">
+                            <div class="col-12 col-md-4">
+                                <div class="card bg-dark border-secondary text-center p-4">
+                                    <div class="display-3 fw-bold text-warning" id="avgRating">0.0</div>
+                                    <div id="avgStars" class="mb-2"></div>
+                                    <small class="text-muted"><span id="totalReviews">0</span> ulasan</small>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <div class="card bg-dark border-secondary p-4" id="ratingDistribution">
+                                    <!-- Rating bars will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Write Review Form (Hidden by default) -->
+                        <div class="card bg-dark border-secondary mb-4" id="reviewFormCard" style="display: none;">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold text-white mb-4">Tulis Ulasan Anda</h5>
+                                <form id="reviewForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Rating</label>
+                                        <div class="star-rating d-flex gap-2" id="starInput">
+                                            <span class="star" data-rating="1"><i class="bi bi-star fs-4"></i></span>
+                                            <span class="star" data-rating="2"><i class="bi bi-star fs-4"></i></span>
+                                            <span class="star" data-rating="3"><i class="bi bi-star fs-4"></i></span>
+                                            <span class="star" data-rating="4"><i class="bi bi-star fs-4"></i></span>
+                                            <span class="star" data-rating="5"><i class="bi bi-star fs-4"></i></span>
+                                        </div>
+                                        <input type="hidden" id="ratingInput" name="rating" value="0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Ulasan Anda</label>
+                                        <textarea class="form-control" id="reviewText" rows="4"
+                                            placeholder="Bagaimana pengalaman Anda dengan produk ini?"></textarea>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-primary px-4">Kirim Ulasan</button>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            onclick="hideReviewForm()">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Reviews List -->
+                        <div id="reviewsList">
+                            <div class="text-center py-4">
+                                <div class="spinner-border spinner-border-sm text-primary"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="loginForm">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Selamat Datang Kembali</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-4">
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i
+                                    class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control border-secondary text-white" name="email"
+                                placeholder="nama@email.com" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i
+                                    class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control border-secondary text-white" name="password"
+                                placeholder="******" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">Masuk
+                        Sekarang</button>
+                    <div class="text-center mt-3">
+                        <span class="text-muted small">Belum punya akun?</span>
+                        <a href="register.html" class="text-primary text-decoration-none fw-bold">Daftar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartDrawer">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title fw-bold"><i class="bi bi-bag me-2"></i>Keranjang Belanja</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div id="cart-items" class="list-group mb-3 flex-grow-1 overflow-auto">
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-cart-x fs-1 mb-2"></i>
+                    <p>Keranjang kosong</p>
+                </div>
+            </div>
+            <div class="mt-auto border-top border-secondary pt-3">
+                <div class="d-flex justify-content-between mb-3 fs-5 fw-bold">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-primary">Rp 0</span>
+                </div>
+                <button onclick="window.location.href='checkout.html'"
+                    class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-lg">
+                    Checkout Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let currentProductId = null;
+        let isInWishlist = false;
+        let selectedRating = 0;
+        let userHasReviewed = false;
+        let currentProduct = null;
+        let productVariants = [];
+        let availableSizes = [];
+        let availableColors = [];
+        let selectedSize = null;
+        let selectedColor = null;
+        let selectedVariant = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentProductId = urlParams.get('id');
+
+            if (!currentProductId) {
+                document.getElementById('product-detail').innerHTML = '<div class="col-12 text-center text-danger"><h4>Produk tidak ditemukan</h4></div>';
+                return;
+            }
+
+            loadProductDetail(currentProductId);
+            loadReviews(currentProductId);
+            setupStarRating();
+            setupReviewForm();
+        });
+
+        function loadProductDetail(id) {
+            // Fetch product and variants in parallel
+            Promise.all([
+                fetchJson(`${apiBase}/get_products.php?id=${id}`),
+                fetchJson(`${apiBase}/variants.php?product_id=${id}`)
+            ])
+                .then(([product, variantData]) => {
+                    currentProduct = product;
+                    const user = getUser();
+                    const isAdmin = user && user.role === 'admin';
+                    const isUser = user && user.role !== 'admin';
+
+                    document.title = `${product.name} - myITS Merchandise`;
+
+                    // Process variants
+                    const hasVariants = variantData.success && variantData.variants && variantData.variants.length > 0;
+                    if (hasVariants) {
+                        productVariants = variantData.variants;
+                        availableSizes = variantData.available_sizes || [];
+                        availableColors = variantData.available_colors || [];
+                    }
+
+                    // Build variant selection HTML
+                    let variantHTML = '';
+                    if (hasVariants) {
+                        // Size selection
+                        if (availableSizes.length > 0) {
+                            variantHTML += `
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Ukuran</label>
+                                <div class="d-flex flex-wrap gap-2" id="sizeOptions">
+                                    ${availableSizes.map(s => `
+                                        <button type="button" class="btn btn-outline-light variant-btn size-btn" 
+                                                data-size-id="${s.id}" data-size-value="${s.value}">
+                                            ${escapeHtml(s.display || s.value)}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                        }
+
+                        // Color selection
+                        if (availableColors.length > 0) {
+                            variantHTML += `
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Warna</label>
+                                <div class="d-flex flex-wrap gap-2" id="colorOptions">
+                                    ${availableColors.map(c => `
+                                        <button type="button" class="btn btn-outline-light variant-btn color-btn" 
+                                                data-color-id="${c.id}" data-color-value="${c.value}"
+                                                style="border-color: ${c.value};">
+                                            ${escapeHtml(c.display || c.value)}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                        }
+
+                        variantHTML += `
+                        <div class="alert alert-secondary py-2 mb-3" id="variantInfo" style="display: none;">
+                            <small><i class="bi bi-info-circle me-1"></i><span id="variantStockInfo">Pilih ukuran dan warna</span></small>
+                        </div>
+                    `;
+                    }
+
+                    document.getElementById('product-detail').innerHTML = `
+                    <div class="col-12 col-md-5 mb-4 mb-md-0">
+                        <img src="${getProductImage(product.image_url, product.name)}" alt="${escapeHtml(product.name)}" 
+                            class="img-fluid rounded-4 shadow-lg w-100" style="max-height: 400px; object-fit: cover;">
+                    </div>
+                    <div class="col-12 col-md-7">
+                        <div class="p-0 p-md-4">
+                            ${product.category_name ? `<span class="badge bg-secondary mb-3">${escapeHtml(product.category_name)}</span>` : ''}
+                            <h1 class="fw-bold text-white mb-3 fs-3">${escapeHtml(product.name)}</h1>
+                            <p class="text-muted mb-4">${escapeHtml(product.description || 'Tidak ada deskripsi')}</p>
+                            
+                            <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+                                <h2 class="text-info fw-bold mb-0 fs-4" id="displayPrice">${'Rp ' + Number(product.price).toLocaleString()}</h2>
+                                <span class="badge ${product.stock > 0 ? 'bg-success' : 'bg-danger'} fs-6" id="displayStock">
+                                    ${product.stock > 0 ? 'Stok: ' + product.stock : 'Habis'}
+                                </span>
+                            </div>
+                            
+                            ${variantHTML}
+                            
+                            ${!isAdmin ? `
+                            <div class="d-flex gap-3 mb-4">
+                                <div class="input-group" style="max-width: 150px;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQty(-1)">-</button>
+                                    <input type="number" class="form-control text-center" id="qty" value="1" min="1" max="${product.stock}">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQty(1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary btn-lg flex-grow-1 py-3 rounded-pill shadow-lg" id="addToCartBtn"
+                                    onclick="addProductToCart()"
+                                    ${product.stock <= 0 ? 'disabled' : ''}>
+                                    <i class="bi bi-cart-plus me-2"></i> Tambah ke Keranjang
+                                </button>
+                                ${isUser ? `
+                                <button class="btn btn-outline-danger btn-lg px-4 rounded-pill" id="wishlistBtn"
+                                    onclick="toggleWishlist(${product.id})">
+                                    <i class="bi bi-heart" id="wishlistIcon"></i>
+                                </button>
+                                ` : ''}
+                            </div>
+                            ` : `
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i> Anda login sebagai Admin.
+                            </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+
+                    // Setup variant selection handlers
+                    if (hasVariants) {
+                        setupVariantHandlers();
+                    }
+
+                    if (isUser) {
+                        checkWishlistStatus(product.id);
+                        document.getElementById('writeReviewBtn').style.display = 'inline-block';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('product-detail').innerHTML = '<div class="col-12 text-center text-danger"><h4>Gagal memuat produk</h4></div>';
+                });
+        }
+
+        function setupVariantHandlers() {
+            // Size buttons
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+                    btn.classList.add('active', 'btn-primary');
+                    btn.classList.remove('btn-outline-light');
+                    selectedSize = btn.dataset.sizeId;
+                    updateSelectedVariant();
+                });
+            });
+
+            // Color buttons
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+                    btn.classList.add('active', 'btn-primary');
+                    btn.classList.remove('btn-outline-light');
+                    selectedColor = btn.dataset.colorId;
+                    updateSelectedVariant();
+                });
+            });
+        }
+
+        function updateSelectedVariant() {
+            // Find matching variant
+            selectedVariant = productVariants.find(v => {
+                const sizeMatch = !selectedSize || v.size_id == selectedSize;
+                const colorMatch = !selectedColor || v.color_id == selectedColor;
+                return sizeMatch && colorMatch;
+            });
+
+            const variantInfo = document.getElementById('variantInfo');
+            const variantStockInfo = document.getElementById('variantStockInfo');
+            const displayPrice = document.getElementById('displayPrice');
+            const displayStock = document.getElementById('displayStock');
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            const qtyInput = document.getElementById('qty');
+
+            if (selectedVariant) {
+                variantInfo.style.display = 'block';
+                const finalPrice = Number(currentProduct.price) + Number(selectedVariant.price_adjustment || 0);
+                const stock = selectedVariant.stock;
+
+                displayPrice.textContent = 'Rp ' + finalPrice.toLocaleString();
+                displayStock.textContent = stock > 0 ? 'Stok: ' + stock : 'Habis';
+                displayStock.className = 'badge fs-6 ' + (stock > 0 ? 'bg-success' : 'bg-danger');
+
+                variantStockInfo.textContent = `${selectedVariant.size_display || ''} ${selectedVariant.color_display || ''} - Stok: ${stock}`;
+
+                if (stock > 0) {
+                    addToCartBtn.disabled = false;
+                    qtyInput.max = stock;
+                    if (parseInt(qtyInput.value) > stock) qtyInput.value = stock;
+                } else {
+                    addToCartBtn.disabled = true;
+                }
+            } else {
+                variantInfo.style.display = 'block';
+                variantStockInfo.textContent = 'Kombinasi tidak tersedia';
+                addToCartBtn.disabled = true;
+            }
+        }
+
+        function addProductToCart() {
+            const qty = parseInt(document.getElementById('qty').value) || 1;
+
+            // Build cart item with variant info
+            const cartItem = {
+                id: currentProduct.id,
+                name: currentProduct.name,
+                price: currentProduct.price,
+                image: currentProduct.image_url
+            };
+
+            // Add variant info if selected
+            if (selectedVariant) {
+                cartItem.variant_id = selectedVariant.id;
+                cartItem.price = Number(currentProduct.price) + Number(selectedVariant.price_adjustment || 0);
+                cartItem.variant_label = `${selectedVariant.size_display || ''} ${selectedVariant.color_display || ''}`.trim();
+            } else if (productVariants.length > 0) {
+                // Has variants but none selected
+                alert('Pilih ukuran dan warna terlebih dahulu');
+                return;
+            }
+
+            // Add to cart
+            for (let i = 0; i < qty; i++) {
+                addToCart(cartItem);
+            }
+        }
+
+        function loadReviews(productId) {
+            fetchJson(`${apiBase}/reviews.php?product_id=${productId}`)
+                .then(res => {
+                    if (!res.success) throw new Error(res.error);
+
+                    const { reviews, summary } = res;
+
+                    // Update rating summary
+                    document.getElementById('avgRating').textContent = summary.average_rating.toFixed(1);
+                    document.getElementById('totalReviews').textContent = summary.review_count;
+                    document.getElementById('avgStars').innerHTML = generateStars(summary.average_rating);
+
+                    // Update rating distribution
+                    const distEl = document.getElementById('ratingDistribution');
+                    let distHtml = '';
+                    for (let i = 5; i >= 1; i--) {
+                        const count = summary.distribution[i] || 0;
+                        const percentage = summary.review_count > 0 ? (count / summary.review_count * 100) : 0;
+                        distHtml += `
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <div class="text-warning" style="width: 70px;">
+                                    ${i} <i class="bi bi-star-fill"></i>
+                                </div>
+                                <div class="flex-grow-1 rating-bar">
+                                    <div class="bar-fill" style="width: ${percentage}%"></div>
+                                </div>
+                                <small class="text-muted" style="width: 40px;">${count}</small>
+                            </div>
+                        `;
+                    }
+                    distEl.innerHTML = distHtml;
+
+                    // Check if current user has reviewed
+                    const user = getUser();
+                    if (user) {
+                        userHasReviewed = reviews.some(r => r.user_id == user.id);
+                        if (userHasReviewed) {
+                            document.getElementById('writeReviewBtn').style.display = 'none';
+                        }
+                    }
+
+                    // Update reviews list
+                    const listEl = document.getElementById('reviewsList');
+                    if (reviews.length === 0) {
+                        listEl.innerHTML = `
+                            <div class="text-center text-muted py-5">
+                                <i class="bi bi-chat-square-text fs-1 mb-3 d-block opacity-50"></i>
+                                <p class="mb-0">Belum ada ulasan untuk produk ini</p>
+                            </div>`;
+                        return;
+                    }
+
+                    listEl.innerHTML = reviews.map(r => `
+                        <div class="card bg-dark border-secondary review-card mb-3">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <div class="fw-bold text-white">${escapeHtml(r.user_name)}</div>
+                                        <small class="text-muted">${formatDate(r.created_at)}</small>
+                                    </div>
+                                    <div class="text-warning">${generateStars(r.rating)}</div>
+                                </div>
+                                ${r.review_text ? `<p class="text-muted mb-0">${escapeHtml(r.review_text)}</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(err => {
+                    console.log('Reviews not loaded:', err);
+                    document.getElementById('reviewsList').innerHTML = '<p class="text-muted text-center">Tidak dapat memuat ulasan</p>';
+                });
+        }
+
+        function generateStars(rating) {
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    html += '<i class="bi bi-star-fill"></i>';
+                } else if (i - 0.5 <= rating) {
+                    html += '<i class="bi bi-star-half"></i>';
+                } else {
+                    html += '<i class="bi bi-star"></i>';
+                }
+            }
+            return html;
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function setupStarRating() {
+            const starContainer = document.getElementById('starInput');
+            const stars = starContainer.querySelectorAll('.star');
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    selectedRating = parseInt(star.dataset.rating);
+                    document.getElementById('ratingInput').value = selectedRating;
+                    updateStarDisplay();
+                });
+
+                star.addEventListener('mouseenter', () => {
+                    const hoverRating = parseInt(star.dataset.rating);
+                    highlightStars(hoverRating);
+                });
+            });
+
+            starContainer.addEventListener('mouseleave', () => {
+                updateStarDisplay();
+            });
+        }
+
+        function highlightStars(rating) {
+            const stars = document.querySelectorAll('#starInput .star');
+            stars.forEach(star => {
+                const starRating = parseInt(star.dataset.rating);
+                const icon = star.querySelector('i');
+                if (starRating <= rating) {
+                    icon.classList.remove('bi-star');
+                    icon.classList.add('bi-star-fill');
+                } else {
+                    icon.classList.remove('bi-star-fill');
+                    icon.classList.add('bi-star');
+                }
+            });
+        }
+
+        function updateStarDisplay() {
+            highlightStars(selectedRating);
+            const stars = document.querySelectorAll('#starInput .star');
+            stars.forEach(star => {
+                const starRating = parseInt(star.dataset.rating);
+                if (starRating <= selectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function showReviewForm() {
+            const user = getUser();
+            if (!user) {
+                alert('Silakan login untuk memberikan ulasan');
+                return;
+            }
+            document.getElementById('reviewFormCard').style.display = 'block';
+            document.getElementById('writeReviewBtn').style.display = 'none';
+        }
+
+        function hideReviewForm() {
+            document.getElementById('reviewFormCard').style.display = 'none';
+            if (!userHasReviewed) {
+                document.getElementById('writeReviewBtn').style.display = 'inline-block';
+            }
+            // Reset form
+            selectedRating = 0;
+            document.getElementById('ratingInput').value = 0;
+            document.getElementById('reviewText').value = '';
+            updateStarDisplay();
+        }
+
+        function setupReviewForm() {
+            document.getElementById('reviewForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const user = getUser();
+                if (!user) {
+                    alert('Silakan login untuk memberikan ulasan');
+                    return;
+                }
+
+                const rating = parseInt(document.getElementById('ratingInput').value);
+                const reviewText = document.getElementById('reviewText').value.trim();
+
+                if (rating < 1 || rating > 5) {
+                    alert('Silakan pilih rating 1-5 bintang');
+                    return;
+                }
+
+                fetchJson(`${apiBase}/reviews.php`, {
+                    method: 'POST',
+                    body: {
+                        user_id: user.id,
+                        product_id: currentProductId,
+                        rating: rating,
+                        review_text: reviewText
+                    }
+                }).then(res => {
+                    if (res.success) {
+                        showToast('Ulasan berhasil dikirim!');
+                        hideReviewForm();
+                        loadReviews(currentProductId);
+                        userHasReviewed = true;
+                    } else {
+                        alert(res.error || 'Gagal mengirim ulasan');
+                    }
+                }).catch(err => {
+                    alert('Terjadi kesalahan saat mengirim ulasan');
+                });
+            });
+        }
+
+        // Wishlist functions
+        function checkWishlistStatus(productId) {
+            const user = getUser();
+            if (!user) return;
+
+            fetchJson(`${apiBase}/wishlist.php?user_id=${user.id}`)
+                .then(res => {
+                    if (res.success && res.items) {
+                        isInWishlist = res.items.some(item => item.product_id == productId);
+                        updateWishlistButton();
+                    }
+                })
+                .catch(err => console.log('Wishlist check failed'));
+        }
+
+        function updateWishlistButton() {
+            const btn = document.getElementById('wishlistBtn');
+            const icon = document.getElementById('wishlistIcon');
+            if (!btn || !icon) return;
+
+            if (isInWishlist) {
+                btn.classList.remove('btn-outline-danger');
+                btn.classList.add('btn-danger');
+                icon.classList.remove('bi-heart');
+                icon.classList.add('bi-heart-fill');
+            } else {
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-outline-danger');
+                icon.classList.remove('bi-heart-fill');
+                icon.classList.add('bi-heart');
+            }
+        }
+
+        function toggleWishlist(productId) {
+            const user = getUser();
+            if (!user) {
+                alert('Silakan login terlebih dahulu');
+                return;
+            }
+
+            if (isInWishlist) {
+                fetchJson(`${apiBase}/wishlist.php?user_id=${user.id}&product_id=${productId}`, {
+                    method: 'DELETE'
+                }).then(res => {
+                    if (res.success) {
+                        isInWishlist = false;
+                        updateWishlistButton();
+                        showToast('Dihapus dari wishlist');
+                    }
+                });
+            } else {
+                fetchJson(`${apiBase}/wishlist.php`, {
+                    method: 'POST',
+                    body: { user_id: user.id, product_id: productId }
+                }).then(res => {
+                    if (res.success) {
+                        isInWishlist = true;
+                        updateWishlistButton();
+                        showToast('Ditambahkan ke wishlist');
+                    }
+                });
+            }
+        }
+
+        function changeQty(delta) {
+            const input = document.getElementById('qty');
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            if (val > parseInt(input.max)) val = parseInt(input.max);
+            input.value = val;
+        }
+
+        // Override add to cart for quantity
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.add-to-cart');
+            if (!btn || btn.closest('#product-detail') === null) return;
+
+            e.stopPropagation();
+
+            const user = getUser();
+            if (!user) {
+                alert('Silakan login terlebih dahulu untuk berbelanja.');
+                const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+                modal.show();
+                return;
+            }
+
+            if (user.role === 'admin') {
+                alert('Admin tidak dapat melakukan pemesanan.');
+                return;
+            }
+
+            const qty = parseInt(document.getElementById('qty').value) || 1;
+
+            fetchJson(`${apiBase}/cart.php`, {
+                method: 'POST',
+                body: {
+                    user_id: user.id,
+                    product_id: btn.dataset.id,
+                    quantity: qty,
+                    action: 'add'
+                }
+            }).then(res => {
+                if (res.success) {
+                    loadCartFromServer();
+                    showToast(`${qty}x ${btn.dataset.name} ditambahkan ke keranjang`);
+                } else {
+                    alert('Gagal menambahkan ke keranjang');
+                }
+            });
+        }, true);
+    </script>
+</body>
+
+</html>

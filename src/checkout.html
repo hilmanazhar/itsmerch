@@ -1,0 +1,609 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - myITS Merchandise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Midtrans Snap.js Sandbox -->
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="Mid-client-PuliXtODh4G92hAf"></script>
+</head>
+
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <a href="catalog.html" style="color:#fff;font-size:1.3rem;text-decoration:none;">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div class="logo-mini">Checkout</div>
+        <div style="width:40px;"></div>
+    </header>
+
+    <div class="container py-4 py-md-5">
+        <h2 class="mb-4 text-center text-white d-none d-md-block">Checkout Pesanan</h2>
+
+        <div class="row g-4">
+            <!-- Left Column - Forms -->
+            <div class="col-12 col-lg-8">
+                <!-- Address Section -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                        <span class="fw-bold"><i class="bi bi-geo-alt me-2"></i>Alamat Pengiriman</span>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#addAddressModal">
+                            <i class="bi bi-plus"></i> <span class="d-none d-sm-inline">Tambah Alamat</span>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="addressList">
+                            <p class="text-muted">Loading alamat...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courier Section -->
+                <div class="card mb-4">
+                    <div class="card-header fw-bold">
+                        <i class="bi bi-truck me-2"></i>Pilih Kurir & Layanan
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Kurir</label>
+                                <select id="courierSelect" class="form-select">
+                                    <option value="">-- Pilih Kurir --</option>
+                                    <option value="jne">JNE</option>
+                                    <option value="pos">POS Indonesia</option>
+                                    <option value="tiki">TIKI</option>
+                                    <option value="sicepat">SiCepat</option>
+                                    <option value="anteraja">AnterAja</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Layanan</label>
+                                <select id="serviceSelect" class="form-select" disabled>
+                                    <option value="">-- Pilih layanan --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="shippingInfo" class="mt-3 text-muted small d-none">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <span id="shippingEtd">Estimasi pengiriman: -</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Summary -->
+            <div class="col-12 col-lg-4">
+                <div class="card sticky-lg-top" style="top: 20px;">
+                    <div class="card-header fw-bold">
+                        <i class="bi bi-receipt me-2"></i>Ringkasan Pesanan
+                    </div>
+                    <div class="card-body">
+                        <div id="checkoutItems" class="mb-3" style="max-height: 250px; overflow-y: auto;">
+                            <p class="text-muted">Loading...</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">Rp 0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Ongkir:</span>
+                            <span id="shippingCost">Rp 0</span>
+                        </div>
+
+                        <!-- Coupon Section -->
+                        <div class="mb-3 mt-3">
+                            <label class="form-label small text-muted mb-2">
+                                <i class="bi bi-tag me-1"></i>Punya Kode Kupon?
+                            </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="couponInput" placeholder="Masukkan kode"
+                                    style="text-transform: uppercase;">
+                                <button class="btn btn-outline-primary" type="button" id="applyCouponBtn">
+                                    Terapkan
+                                </button>
+                            </div>
+                            <div id="couponMessage" class="mt-2 small"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2 text-success" id="discountRow"
+                            style="display: none !important;">
+                            <span><i class="bi bi-check-circle me-1"></i>Diskon:</span>
+                            <span id="discountAmount">- Rp 0</span>
+                        </div>
+
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                            <span>Total:</span>
+                            <span id="grandTotal" class="text-primary">Rp 0</span>
+                        </div>
+                        <button id="payBtn" class="btn btn-primary w-100 py-3 rounded-pill fw-bold">
+                            <i class="bi bi-credit-card me-2"></i>Bayar Sekarang
+                        </button>
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-shield-check me-1"></i>Pembayaran aman dengan Midtrans
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add Address -->
+    <div class="modal fade" id="addAddressModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <form class="modal-content" id="addAddressForm">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Tambah Alamat Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Label Alamat</label>
+                        <input type="text" class="form-control" name="label" placeholder="Rumah / Kantor" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nama Penerima</label>
+                        <input type="text" class="form-control" name="recipient_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">No. Telepon</label>
+                        <input type="tel" class="form-control" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cari Kota/Kecamatan</label>
+                        <input type="text" class="form-control" id="destinationSearch"
+                            placeholder="Ketik nama kota... (min 3 huruf)" autocomplete="off">
+                        <div id="destinationResults" class="list-group position-absolute w-100 shadow-sm"
+                            style="z-index: 1050; max-height: 200px; overflow-y: auto;"></div>
+                        <input type="hidden" name="destination_id" id="destinationId">
+                        <input type="hidden" name="destination_label" id="destinationLabel">
+                        <div id="selectedDestination" class="mt-2 small text-success d-none">
+                            <i class="bi bi-check-circle me-1"></i><span></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Alamat Lengkap</label>
+                        <textarea class="form-control" name="address_detail" rows="3"
+                            placeholder="Nama jalan, nomor rumah, RT/RW, dll." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Alamat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+        style="background: rgba(0,0,0,0.7); z-index: 9999;">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-center text-white">
+                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;"></div>
+                <p class="mb-0" id="loadingText">Memproses pembayaran...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        let selectedAddressId = null;
+        let selectedDestinationId = null;
+        let cartItems = [];
+        let subtotal = 0;
+        let selectedShippingCost = 0;
+        let shippingServices = [];
+        let searchTimeout = null;
+        let appliedCoupon = null;
+        let discountAmount = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getUser();
+            if (!user) {
+                alert('Silakan login terlebih dahulu');
+                window.location.href = 'index.html';
+                return;
+            }
+            if (user.role === 'admin') {
+                alert('Admin tidak dapat melakukan pemesanan');
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            loadAddresses();
+            loadCheckoutItems();
+            setupDestinationSearch();
+            setupCoupon();
+
+            document.getElementById('courierSelect').addEventListener('change', onCourierChange);
+            document.getElementById('serviceSelect').addEventListener('change', onServiceChange);
+            document.getElementById('payBtn').addEventListener('click', processPayment);
+            document.getElementById('addAddressForm').addEventListener('submit', addAddress);
+        });
+
+        // Coupon functionality
+        function setupCoupon() {
+            const couponInput = document.getElementById('couponInput');
+            const applyBtn = document.getElementById('applyCouponBtn');
+
+            applyBtn.addEventListener('click', applyCoupon);
+            couponInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    applyCoupon();
+                }
+            });
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponInput').value.trim().toUpperCase();
+            const msgEl = document.getElementById('couponMessage');
+            const user = getUser();
+
+            if (!code) {
+                msgEl.innerHTML = '<span class="text-danger"><i class="bi bi-x-circle me-1"></i>Masukkan kode kupon</span>';
+                return;
+            }
+
+            msgEl.innerHTML = '<span class="text-muted"><i class="bi bi-hourglass-split me-1"></i>Memvalidasi...</span>';
+
+            fetchJson(`${apiBase}/coupons.php?code=${code}&user_id=${user.id}&subtotal=${subtotal}`)
+                .then(res => {
+                    if (res.success) {
+                        appliedCoupon = res.coupon;
+                        discountAmount = res.discount;
+
+                        msgEl.innerHTML = `<span class="text-success"><i class="bi bi-check-circle me-1"></i>${res.message}</span>`;
+
+                        // Show discount row
+                        document.getElementById('discountRow').style.display = 'flex !important';
+                        document.getElementById('discountRow').classList.add('d-flex');
+                        document.getElementById('discountAmount').textContent = '- Rp ' + discountAmount.toLocaleString();
+
+                        // Disable input
+                        document.getElementById('couponInput').disabled = true;
+                        document.getElementById('applyCouponBtn').innerHTML = '<i class="bi bi-x"></i>';
+                        document.getElementById('applyCouponBtn').classList.remove('btn-outline-primary');
+                        document.getElementById('applyCouponBtn').classList.add('btn-outline-danger');
+                        document.getElementById('applyCouponBtn').onclick = removeCoupon;
+
+                        updateTotal();
+                    } else {
+                        msgEl.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle me-1"></i>${res.error}</span>`;
+                        appliedCoupon = null;
+                        discountAmount = 0;
+                    }
+                })
+                .catch(err => {
+                    msgEl.innerHTML = '<span class="text-danger"><i class="bi bi-x-circle me-1"></i>Gagal memvalidasi kupon</span>';
+                });
+        }
+
+        function removeCoupon() {
+            appliedCoupon = null;
+            discountAmount = 0;
+
+            document.getElementById('couponInput').value = '';
+            document.getElementById('couponInput').disabled = false;
+            document.getElementById('couponMessage').innerHTML = '';
+            document.getElementById('discountRow').style.display = 'none !important';
+            document.getElementById('discountRow').classList.remove('d-flex');
+
+            const btn = document.getElementById('applyCouponBtn');
+            btn.innerHTML = 'Terapkan';
+            btn.classList.remove('btn-outline-danger');
+            btn.classList.add('btn-outline-primary');
+            btn.onclick = applyCoupon;
+
+            updateTotal();
+        }
+
+        // Destination search
+        function setupDestinationSearch() {
+            const searchInput = document.getElementById('destinationSearch');
+            const resultsContainer = document.getElementById('destinationResults');
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+                if (searchTimeout) clearTimeout(searchTimeout);
+                if (query.length < 3) {
+                    resultsContainer.innerHTML = '';
+                    return;
+                }
+
+                searchTimeout = setTimeout(() => {
+                    fetchJson(`${apiBase}/search_destination.php?search=${encodeURIComponent(query)}&limit=10`)
+                        .then(destinations => {
+                            if (destinations.length === 0) {
+                                resultsContainer.innerHTML = '<div class="list-group-item text-muted">Tidak ditemukan</div>';
+                                return;
+                            }
+                            resultsContainer.innerHTML = destinations.map(d => `
+                                <button type="button" class="list-group-item list-group-item-action" 
+                                        onclick="selectDestination('${d.id}', '${escapeHtml(d.label)}')">
+                                    ${escapeHtml(d.label)}
+                                </button>
+                            `).join('');
+                        })
+                        .catch(err => {
+                            resultsContainer.innerHTML = '<div class="list-group-item text-danger">Error loading</div>';
+                        });
+                }, 300);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                    resultsContainer.innerHTML = '';
+                }
+            });
+        }
+
+        function selectDestination(id, label) {
+            document.getElementById('destinationId').value = id;
+            document.getElementById('destinationLabel').value = label;
+            document.getElementById('destinationSearch').value = label;
+            document.getElementById('destinationResults').innerHTML = '';
+
+            const selectedDiv = document.getElementById('selectedDestination');
+            selectedDiv.querySelector('span').textContent = label;
+            selectedDiv.classList.remove('d-none');
+        }
+
+        function loadAddresses() {
+            const user = getUser();
+            fetchJson(`${apiBase}/addresses.php?user_id=${user.id}`)
+                .then(addresses => {
+                    const container = document.getElementById('addressList');
+                    if (!addresses || addresses.length === 0) {
+                        container.innerHTML = '<p class="text-muted">Belum ada alamat. Tambahkan alamat baru.</p>';
+                        return;
+                    }
+                    container.innerHTML = addresses.map((addr, i) => `
+                        <div class="form-check mb-3 p-3 border rounded ${i === 0 ? 'border-primary' : 'border-secondary'}" 
+                             onclick="selectAddress(${addr.id}, '${addr.destination_id || ''}', this)">
+                            <input class="form-check-input" type="radio" name="address" id="addr${addr.id}" ${i === 0 ? 'checked' : ''}>
+                            <label class="form-check-label w-100" for="addr${addr.id}">
+                                <strong>${escapeHtml(addr.label)}</strong> - ${escapeHtml(addr.recipient_name)}<br>
+                                <small class="text-muted">${escapeHtml(addr.phone)}</small><br>
+                                <small>${escapeHtml(addr.address_detail)}</small>
+                            </label>
+                        </div>
+                    `).join('');
+
+                    if (addresses.length > 0) {
+                        selectedAddressId = addresses[0].id;
+                        selectedDestinationId = addresses[0].destination_id || null;
+                    }
+                });
+        }
+
+        function selectAddress(id, destId, el) {
+            selectedAddressId = id;
+            selectedDestinationId = destId;
+
+            document.querySelectorAll('#addressList .form-check').forEach(e => {
+                e.classList.remove('border-primary');
+                e.classList.add('border-secondary');
+            });
+            el.classList.remove('border-secondary');
+            el.classList.add('border-primary');
+            el.querySelector('input').checked = true;
+
+            document.getElementById('courierSelect').value = '';
+            document.getElementById('serviceSelect').innerHTML = '<option value="">-- Pilih layanan --</option>';
+            document.getElementById('serviceSelect').disabled = true;
+            selectedShippingCost = 0;
+            updateTotal();
+        }
+
+        function onCourierChange(e) {
+            const courier = e.target.value;
+            const serviceSelect = document.getElementById('serviceSelect');
+            serviceSelect.innerHTML = '<option value="">Loading...</option>';
+            serviceSelect.disabled = true;
+
+            if (!courier || !selectedDestinationId) {
+                serviceSelect.innerHTML = '<option value="">-- Pilih layanan --</option>';
+                return;
+            }
+
+            fetchJson(`${apiBase}/get_shipping_cost.php?destination=${selectedDestinationId}&courier=${courier}&weight=1000`)
+                .then(data => {
+                    shippingServices = data.costs || [];
+                    if (shippingServices.length === 0) {
+                        serviceSelect.innerHTML = '<option value="">Tidak ada layanan</option>';
+                        return;
+                    }
+                    serviceSelect.innerHTML = '<option value="">-- Pilih layanan --</option>' +
+                        shippingServices.map((s, i) => `
+                            <option value="${i}">${s.service} - Rp ${Number(s.cost).toLocaleString()} (${s.etd})</option>
+                        `).join('');
+                    serviceSelect.disabled = false;
+                })
+                .catch(err => {
+                    serviceSelect.innerHTML = '<option value="">Error loading</option>';
+                });
+        }
+
+        function onServiceChange(e) {
+            const idx = e.target.value;
+            if (idx === '' || !shippingServices[idx]) {
+                selectedShippingCost = 0;
+                document.getElementById('shippingInfo').classList.add('d-none');
+            } else {
+                selectedShippingCost = shippingServices[idx].cost;
+                document.getElementById('shippingEtd').textContent = `Estimasi: ${shippingServices[idx].etd} hari`;
+                document.getElementById('shippingInfo').classList.remove('d-none');
+            }
+            updateTotal();
+        }
+
+        function loadCheckoutItems() {
+            const user = getUser();
+            fetchJson(`${apiBase}/cart.php?user_id=${user.id}`)
+                .then(data => {
+                    // API returns {success: true, items: [...]}
+                    cartItems = (data && data.items) ? data.items : [];
+                    if (cartItems.length === 0) {
+                        document.getElementById('checkoutItems').innerHTML = '<p class="text-muted">Keranjang kosong</p>';
+                        document.getElementById('payBtn').disabled = true;
+                        return;
+                    }
+
+                    subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+                    document.getElementById('checkoutItems').innerHTML = cartItems.map(item => `
+                        <div class="d-flex gap-2 mb-2 align-items-center">
+                            <img src="${getProductImage(item.image_url, item.name)}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;">
+                            <div class="flex-grow-1">
+                                <small class="fw-bold">${escapeHtml(item.name)}</small>
+                                ${item.variant_info ? `<br><small class="text-muted">${escapeHtml(item.variant_info)}</small>` : ''}
+                                <br><small class="text-muted">${item.quantity}x Rp ${Number(item.price).toLocaleString()}</small>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    updateTotal();
+                });
+        }
+
+        function updateTotal() {
+            document.getElementById('subtotal').textContent = 'Rp ' + subtotal.toLocaleString();
+            document.getElementById('shippingCost').textContent = 'Rp ' + selectedShippingCost.toLocaleString();
+
+            const total = subtotal + selectedShippingCost - discountAmount;
+            document.getElementById('grandTotal').textContent = 'Rp ' + Math.max(0, total).toLocaleString();
+        }
+
+        function addAddress(e) {
+            e.preventDefault();
+            const user = getUser();
+            const form = e.target;
+            const data = {
+                user_id: user.id,
+                label: form.label.value,
+                recipient_name: form.recipient_name.value,
+                phone: form.phone.value,
+                destination_id: form.destination_id.value,
+                destination_label: form.destination_label.value,
+                address_detail: form.address_detail.value
+            };
+
+            fetchJson(`${apiBase}/addresses.php`, { method: 'POST', body: data })
+                .then(res => {
+                    if (res.success) {
+                        bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
+                        form.reset();
+                        document.getElementById('selectedDestination').classList.add('d-none');
+                        loadAddresses();
+                        showToast('Alamat berhasil ditambahkan');
+                    } else {
+                        alert('Gagal menambahkan alamat');
+                    }
+                });
+        }
+
+        function processPayment() {
+            if (!selectedAddressId) {
+                alert('Pilih alamat pengiriman');
+                return;
+            }
+            if (selectedShippingCost === 0) {
+                alert('Pilih kurir dan layanan pengiriman');
+                return;
+            }
+            if (cartItems.length === 0) {
+                alert('Keranjang kosong');
+                return;
+            }
+
+            const user = getUser();
+            const total = subtotal + selectedShippingCost - discountAmount;
+
+            document.getElementById('loadingOverlay').classList.remove('d-none');
+
+            const orderData = {
+                user_id: user.id,
+                address_id: selectedAddressId,
+                items: cartItems.map(i => ({ product_id: i.product_id, quantity: i.quantity, price: i.price })),
+                subtotal: subtotal,
+                shipping_cost: selectedShippingCost,
+                discount_amount: discountAmount,
+                coupon_id: appliedCoupon ? appliedCoupon.id : null,
+                total: total
+            };
+
+            fetchJson(`${apiBase}/checkout.php`, { method: 'POST', body: orderData })
+                .then(res => {
+                    if (res.success && res.snap_token) {
+                        // Record coupon usage if applied
+                        if (appliedCoupon) {
+                            fetchJson(`${apiBase}/coupons.php`, {
+                                method: 'POST',
+                                body: {
+                                    action: 'use',
+                                    coupon_id: appliedCoupon.id,
+                                    user_id: user.id,
+                                    order_id: res.order_id,
+                                    discount_amount: discountAmount
+                                }
+                            });
+                        }
+
+                        snap.pay(res.snap_token, {
+                            onSuccess: function (result) {
+                                document.getElementById('loadingText').textContent = 'Pembayaran berhasil! Mengupdate status...';
+
+                                // Manual update for localhost/sandbox where webhook might not reach
+                                fetchJson(`${apiBase}/update_payment_status.php`, {
+                                    method: 'POST',
+                                    body: result
+                                }).then(res => {
+                                    console.log('Status updated:', res);
+                                    setTimeout(() => {
+                                        window.location.href = 'transactions.html';
+                                    }, 1000);
+                                }).catch(err => {
+                                    console.error('Update status failed:', err);
+                                    window.location.href = 'transactions.html';
+                                });
+                            },
+                            onPending: function (result) {
+                                document.getElementById('loadingOverlay').classList.add('d-none');
+                                alert('Pembayaran pending. Silakan selesaikan pembayaran.');
+                                window.location.href = 'transactions.html';
+                            },
+                            onError: function (result) {
+                                document.getElementById('loadingOverlay').classList.add('d-none');
+                                alert('Pembayaran gagal');
+                            },
+                            onClose: function () {
+                                document.getElementById('loadingOverlay').classList.add('d-none');
+                            }
+                        });
+                    } else {
+                        document.getElementById('loadingOverlay').classList.add('d-none');
+                        alert('Gagal membuat pesanan: ' + (res.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('loadingOverlay').classList.add('d-none');
+                    alert('Error: ' + err.message);
+                });
+        }
+    </script>
+</body>
+
+</html>
