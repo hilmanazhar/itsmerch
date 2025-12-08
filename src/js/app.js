@@ -844,11 +844,14 @@ function addToCart(product) {
     return;
   }
 
+  // Get quantity from product object or default to 1
+  const qty = product.quantity || 1;
+
   // Server side cart
   const cartData = {
     user_id: user.id,
     product_id: product.id || product.product_id,
-    quantity: 1,
+    quantity: qty,
     action: 'add'
   };
 
@@ -865,7 +868,7 @@ function addToCart(product) {
       loadCartFromServer();
       showToast('Ditambahkan ke keranjang');
     } else {
-      alert('Gagal menambahkan ke keranjang');
+      alert('Gagal menambahkan ke keranjang: ' + (res.error || ''));
     }
   }).catch(err => {
     console.error(err);
@@ -984,11 +987,22 @@ function showCart() {
   // Handle remove item
   list.querySelectorAll('.remove-item').forEach(b => b.addEventListener('click', () => {
     const prodId = b.dataset.id;
+    const variantId = b.dataset.variant || null;
+    const cartId = b.dataset.cartId || null;
     const idx = parseInt(b.dataset.idx);
     const user = getUser();
 
     if (user) {
-      fetchJson(`${apiBase}/cart.php?user_id=${user.id}&product_id=${prodId}`, { method: 'DELETE' })
+      // Use cart_id if available (more accurate for variants)
+      let deleteUrl = `${apiBase}/cart.php?user_id=${user.id}`;
+      if (cartId) {
+        deleteUrl += `&cart_id=${cartId}`;
+      } else {
+        deleteUrl += `&product_id=${prodId}`;
+        if (variantId) deleteUrl += `&variant_id=${variantId}`;
+      }
+
+      fetchJson(deleteUrl, { method: 'DELETE' })
         .then(res => {
           if (res.success) {
             loadCartFromServer().then(showCart);

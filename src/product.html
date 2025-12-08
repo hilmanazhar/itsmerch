@@ -498,7 +498,8 @@
                 id: currentProduct.id,
                 name: currentProduct.name,
                 price: currentProduct.price,
-                image: currentProduct.image_url
+                image: currentProduct.image_url,
+                quantity: qty  // Include quantity in the cart item
             };
 
             // Add variant info if selected
@@ -512,10 +513,8 @@
                 return;
             }
 
-            // Add to cart
-            for (let i = 0; i < qty; i++) {
-                addToCart(cartItem);
-            }
+            // Add to cart with quantity
+            addToCart(cartItem);
         }
 
         function loadReviews(productId) {
