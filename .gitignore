@@ -1,9 +1,9 @@
-# Sensitive Config Files
-src/api/db.php
-src/api/rajaongkir_config.php
-src/api/midtrans_config.php
-src/api/config.php
-src/api/email_config.php
+# Sensitive Config Files (commented for Railway deployment - uses env vars)
+# src/api/db.php
+# src/api/rajaongkir_config.php
+# src/api/midtrans_config.php
+# src/api/config.php
+# src/api/email_config.php
 
 # Logs
 *.log
