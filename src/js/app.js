@@ -159,8 +159,18 @@ function bindUI() {
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.add-to-cart');
     if (!btn) return;
+
+    const productId = btn.dataset.id;
+    const hasVariants = btn.dataset.hasVariants === 'true';
+
+    // If product has variants, redirect to product page to select variant
+    if (hasVariants) {
+      window.location.href = `product.html?id=${productId}`;
+      return;
+    }
+
     const product = {
-      product_id: btn.dataset.id,
+      product_id: productId,
       name: btn.dataset.name,
       price: parseFloat(btn.dataset.price || 0),
       image_url: btn.dataset.image
@@ -289,7 +299,7 @@ function renderProductGrid(container, products) {
             </div>
             ` : `
             <button class="btn btn-sm btn-primary add-to-cart w-100"
-                data-id="${p.id}" data-name="${escapeAttr(p.name)}" data-price="${p.price}" data-image="${escapeAttr(p.image_url)}">
+                data-id="${p.id}" data-name="${escapeAttr(p.name)}" data-price="${p.price}" data-image="${escapeAttr(p.image_url)}" data-has-variants="${p.has_variants ? 'true' : 'false'}">
                 <i class="bi bi-cart-plus me-1"></i> Tambah
             </button>
             `}

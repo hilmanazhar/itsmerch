@@ -73,6 +73,14 @@ if ($id > 0) {
     $res = $stmt->get_result();
     $products = [];
     while ($row = $res->fetch_assoc()) {
+        // Check if product has variants
+        $variantCheck = $mysqli->prepare("SELECT COUNT(*) as cnt FROM product_variants WHERE product_id = ?");
+        $variantCheck->bind_param('i', $row['id']);
+        $variantCheck->execute();
+        $variantResult = $variantCheck->get_result()->fetch_assoc();
+        $row['has_variants'] = ($variantResult['cnt'] > 0);
+        $variantCheck->close();
+        
         $products[] = $row;
     }
     json_ok($products);
