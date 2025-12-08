@@ -316,10 +316,29 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('quickAddConfirmBtn')?.addEventListener('click', () => {
     if (!quickAddProduct) return;
 
-    // Check if variants exist but none selected
-    if (quickAddVariants.length > 0 && !quickAddSelectedVariant) {
-      alert('Pilih ukuran dan warna terlebih dahulu');
-      return;
+    // Check if variants exist
+    if (quickAddVariants.length > 0) {
+      // Get available variant types
+      const hasSizes = quickAddVariants.some(v => v.size_display);
+      const hasColors = quickAddVariants.some(v => v.color_display);
+      const selectedSize = document.querySelector('.quick-size-btn.active')?.dataset.size || null;
+      const selectedColor = document.querySelector('.quick-color-btn.active')?.dataset.color || null;
+
+      // Check if required selections are made
+      if (hasSizes && !selectedSize) {
+        alert('Pilih ukuran terlebih dahulu');
+        return;
+      }
+      if (hasColors && !selectedColor) {
+        alert('Pilih warna terlebih dahulu');
+        return;
+      }
+
+      // Check if valid variant combination exists
+      if (!quickAddSelectedVariant) {
+        alert('Kombinasi ukuran dan warna tidak tersedia');
+        return;
+      }
     }
 
     const qty = parseInt(document.getElementById('quickAddQty').value) || 1;

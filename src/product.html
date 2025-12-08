@@ -514,8 +514,20 @@
                 cartItem.price = Number(currentProduct.price) + Number(selectedVariant.price_adjustment || 0);
                 cartItem.variant_label = `${selectedVariant.size_display || ''} ${selectedVariant.color_display || ''}`.trim();
             } else if (productVariants.length > 0) {
-                // Has variants but none selected
-                alert('Pilih ukuran dan warna terlebih dahulu');
+                // Has variants - check what's required
+                const hasSizes = productVariants.some(v => v.size_display);
+                const hasColors = productVariants.some(v => v.color_display);
+                
+                if (hasSizes && !selectedSize) {
+                    alert('Pilih ukuran terlebih dahulu');
+                    return;
+                }
+                if (hasColors && !selectedColor) {
+                    alert('Pilih warna terlebih dahulu');
+                    return;
+                }
+                // Both selected but no valid variant
+                alert('Kombinasi ukuran dan warna tidak tersedia');
                 return;
             }
 
