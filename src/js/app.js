@@ -438,6 +438,11 @@ document.addEventListener('DOMContentLoaded', () => {
           btn.classList.remove('btn-danger');
           btn.classList.add('btn-outline-danger');
           btn.innerHTML = '<i class="bi bi-heart"></i>';
+
+          // Reload wishlist page if on wishlist page
+          if (typeof loadWishlist === 'function') {
+            loadWishlist();
+          }
         } else {
           showToast(res.error || 'Gagal menghapus dari wishlist');
         }
