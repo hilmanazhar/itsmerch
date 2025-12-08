@@ -351,7 +351,8 @@
                     document.getElementById('product-detail').innerHTML = `
                     <div class="col-12 col-md-5 mb-4 mb-md-0">
                         <img src="${getProductImage(product.image_url, product.name)}" alt="${escapeHtml(product.name)}" 
-                            class="img-fluid rounded-4 shadow-lg w-100" style="max-height: 400px; object-fit: cover;">
+                            class="img-fluid rounded-4 shadow-lg w-100" style="max-height: 400px; object-fit: cover;"
+                            onerror="this.onerror=null; this.src=generatePlaceholder('${escapeAttr(product.name)}');">
                     </div>
                     <div class="col-12 col-md-7">
                         <div class="p-0 p-md-4">

@@ -25,7 +25,11 @@ function getProductImage(imageUrl, productName = 'Produk') {
   if (imageUrl && imageUrl.trim() !== '') {
     return imageUrl;
   }
-  // Generate a data URL placeholder with gradient background and product name
+  return generatePlaceholder(productName);
+}
+
+// Generate placeholder image when image fails to load
+function generatePlaceholder(productName = 'Produk') {
   const canvas = document.createElement('canvas');
   canvas.width = 300;
   canvas.height = 300;
@@ -232,7 +236,8 @@ function renderProductGrid(container, products) {
     <div class="col-md-3 mb-4">
       <div class="card product-card">
         <a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit">
-            <img src="${getProductImage(p.image_url, p.name)}" class="card-img-top" alt="${escapeHtml(p.name)}">
+            <img src="${getProductImage(p.image_url, p.name)}" class="card-img-top" alt="${escapeHtml(p.name)}"
+                 onerror="this.onerror=null; this.src=generatePlaceholder('${escapeAttr(p.name)}');">
             <div class="card-body">
             <h5 class="card-title">${escapeHtml(p.name)}</h5>
             <p class="text-info fw-bold mb-1">Rp ${Number(p.price).toLocaleString()}</p>
