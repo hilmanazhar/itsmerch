@@ -130,20 +130,21 @@
 
         .filter-badge {
             position: relative;
-            padding-right: 30px !important;
+            padding-right: 10px !important;
         }
 
         .filter-badge .count {
             position: absolute;
-            top: 50%;
-            right: 6px;
-            transform: translateY(-50%);
-            font-size: 0.7rem;
-            padding: 2px 6px;
+            top: -5px;
+            right: -5px;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            min-width: 18px;
+            text-align: center;
         }
 
         #orderStats {
-            margin-bottom: 1.5rem !important;
+            margin-bottom: 2rem !important;
         }
 
         #orderTabs {
@@ -247,20 +248,19 @@
                         <li class="nav-item">
                             <a class="nav-link filter-badge" href="#" data-filter="unpaid">
                                 <i class="bi bi-clock me-1"></i>Belum Bayar
-                                <span class="badge bg-warning text-dark count" id="countUnpaid">0</span>
+                                <span class="badge bg-secondary count" id="countUnpaid">0</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link filter-badge" href="#" data-filter="packing">
                                 <i class="bi bi-box-seam me-1"></i>Dikemas
-                                <span class="badge bg-info count" id="countPacking">0</span>
+                                <span class="badge bg-secondary count" id="countPacking">0</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link filter-badge" href="#" data-filter="shipped">
                                 <i class="bi bi-truck me-1"></i>Dikirim
-                                <span class="badge bg-purple count" id="countShipped"
-                                    style="background:#6f42c1!important;">0</span>
+                                <span class="badge bg-secondary count" id="countShipped">0</span>
                             </a>
                         </li>
                         <li class="nav-item">
