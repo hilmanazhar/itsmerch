@@ -897,17 +897,28 @@ function showCart() {
     return;
   }
 
-  let html = `<ul class="list-group mb-2">` + cart.map((it, idx) => `<li class="list-group-item d-flex justify-content-between align-items-center">
-    <div><strong>${escapeHtml(it.name)}</strong><br><small>Rp ${Number(it.price).toLocaleString()}</small></div>
+  let html = `<ul class="list-group mb-2">` + cart.map((it, idx) => {
+    // Build variant info string
+    let variantInfo = '';
+    if (it.variant_info && it.variant_info.trim() !== '') {
+      variantInfo = `<br><small class="text-info">${escapeHtml(it.variant_info)}</small>`;
+    }
+
+    return `<li class="list-group-item d-flex justify-content-between align-items-center">
+    <div>
+      <strong>${escapeHtml(it.name)}</strong>${variantInfo}
+      <br><small>Rp ${Number(it.price).toLocaleString()}</small>
+    </div>
     <div class="text-end">
       <div class="d-flex align-items-center gap-2 mb-1">
-        <button class="btn btn-sm btn-outline-secondary qty-minus" data-id="${it.product_id}" data-idx="${idx}" style="width:28px;height:28px;padding:0;">-</button>
+        <button class="btn btn-sm btn-outline-secondary qty-minus" data-id="${it.product_id}" data-variant="${it.variant_id || ''}" data-cart-id="${it.id || ''}" data-idx="${idx}" style="width:28px;height:28px;padding:0;" ${it.quantity <= 1 ? 'disabled' : ''}>-</button>
         <span class="badge bg-primary rounded-pill" style="min-width:24px;">${it.quantity}</span>
-        <button class="btn btn-sm btn-outline-secondary qty-plus" data-id="${it.product_id}" data-idx="${idx}" style="width:28px;height:28px;padding:0;">+</button>
+        <button class="btn btn-sm btn-outline-secondary qty-plus" data-id="${it.product_id}" data-variant="${it.variant_id || ''}" data-cart-id="${it.id || ''}" data-idx="${idx}" style="width:28px;height:28px;padding:0;">+</button>
       </div>
-      <button class="btn btn-sm btn-outline-danger remove-item" data-id="${it.product_id}" data-idx="${idx}"><i class="bi bi-trash"></i></button>
+      <button class="btn btn-sm btn-outline-danger remove-item" data-id="${it.product_id}" data-variant="${it.variant_id || ''}" data-cart-id="${it.id || ''}" data-idx="${idx}"><i class="bi bi-trash"></i></button>
     </div>
-  </li>`).join('') + `</ul>`;
+  </li>`;
+  }).join('') + `</ul>`;
 
   list.innerHTML = html;
 
@@ -916,13 +927,19 @@ function showCart() {
 
   // Handle quantity decrease
   list.querySelectorAll('.qty-minus').forEach(b => b.addEventListener('click', () => {
+    if (b.disabled) return;
     const prodId = b.dataset.id;
+    const variantId = b.dataset.variant || null;
+    const cartId = b.dataset.cartId || null;
     const user = getUser();
 
     if (user) {
+      const body = { user_id: user.id, product_id: prodId, quantity: -1, action: 'update' };
+      if (variantId) body.variant_id = variantId;
+
       fetchJson(`${apiBase}/cart.php`, {
         method: 'POST',
-        body: { user_id: user.id, product_id: prodId, quantity: -1, action: 'update' }
+        body: body
       }).then(res => {
         if (res.success) {
           loadCartFromServer().then(showCart);
@@ -934,12 +951,16 @@ function showCart() {
   // Handle quantity increase
   list.querySelectorAll('.qty-plus').forEach(b => b.addEventListener('click', () => {
     const prodId = b.dataset.id;
+    const variantId = b.dataset.variant || null;
     const user = getUser();
 
     if (user) {
+      const body = { user_id: user.id, product_id: prodId, quantity: 1, action: 'update' };
+      if (variantId) body.variant_id = variantId;
+
       fetchJson(`${apiBase}/cart.php`, {
         method: 'POST',
-        body: { user_id: user.id, product_id: prodId, quantity: 1, action: 'update' }
+        body: body
       }).then(res => {
         if (res.success) {
           loadCartFromServer().then(showCart);
