@@ -242,6 +242,55 @@
         </div>
     </div>
 
+    <!-- Quick Add to Cart Modal -->
+    <div class="modal fade" id="quickAddCartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="quickAddProductName">Tambah ke Keranjang</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <img id="quickAddProductImage" src="" alt="" class="img-fluid rounded" style="max-height: 150px;">
+                    </div>
+                    <p class="text-info fw-bold fs-5 mb-3" id="quickAddProductPrice">Rp 0</p>
+
+                    <!-- Variant Selection -->
+                    <div id="quickAddVariantSection" style="display:none;">
+                        <div class="mb-3" id="quickAddSizeSection">
+                            <label class="form-label fw-bold">Ukuran</label>
+                            <div class="d-flex flex-wrap gap-2" id="quickAddSizeOptions"></div>
+                        </div>
+                        <div class="mb-3" id="quickAddColorSection">
+                            <label class="form-label fw-bold">Warna</label>
+                            <div class="d-flex flex-wrap gap-2" id="quickAddColorOptions"></div>
+                        </div>
+                        <div class="alert alert-info small py-2 mb-3" id="quickAddVariantInfo" style="display:none;">
+                            <i class="bi bi-info-circle me-1"></i> <span id="quickAddVariantInfoText"></span>
+                        </div>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Jumlah</label>
+                        <div class="d-flex align-items-center justify-content-center gap-3">
+                            <button type="button" class="btn btn-outline-secondary" id="quickAddQtyMinus" style="width:40px;height:40px;">-</button>
+                            <input type="number" class="form-control text-center" id="quickAddQty" value="1" min="1" style="width:70px;">
+                            <button type="button" class="btn btn-outline-secondary" id="quickAddQtyPlus" style="width:40px;height:40px;">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="quickAddConfirmBtn">
+                        <i class="bi bi-cart-plus me-1"></i> Tambah ke Keranjang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Admin Floating Action Button -->
     <div id="adminFab" class="position-fixed bottom-0 end-0 p-4" style="z-index: 1050; display: none;">
         <button class="btn btn-success btn-lg rounded-circle shadow-lg" onclick="showAddProductModal()"

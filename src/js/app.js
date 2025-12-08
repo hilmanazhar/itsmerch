@@ -155,29 +155,188 @@ function bindUI() {
   const cartBtn = document.getElementById('cartButton');
   if (cartBtn) cartBtn.addEventListener('click', (e) => { e.preventDefault(); showCart(); });
 
-  // delegate add-to-cart
+  // delegate add-to-cart - show quick add modal
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.add-to-cart');
     if (!btn) return;
 
     const productId = btn.dataset.id;
-    const hasVariants = btn.dataset.hasVariants === 'true';
+    showQuickAddModal(productId);
+  });
+}
 
-    // If product has variants, redirect to product page to select variant
-    if (hasVariants) {
-      window.location.href = `product.html?id=${productId}`;
+// Quick Add to Cart Modal state
+let quickAddProduct = null;
+let quickAddVariants = [];
+let quickAddSelectedVariant = null;
+
+async function showQuickAddModal(productId) {
+  const user = getUser();
+  if (!user) {
+    alert('Silakan login terlebih dahulu untuk berbelanja.');
+    const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+    modal.show();
+    return;
+  }
+
+  if (user.role === 'admin') {
+    alert('Admin tidak dapat melakukan pemesanan.');
+    return;
+  }
+
+  // Fetch product details
+  try {
+    const product = await fetchJson(`${apiBase}/get_products.php?id=${productId}`);
+    quickAddProduct = product;
+
+    // Populate modal
+    document.getElementById('quickAddProductName').textContent = product.name;
+    document.getElementById('quickAddProductImage').src = getProductImage(product.image_url, product.name);
+    document.getElementById('quickAddProductPrice').textContent = 'Rp ' + Number(product.price).toLocaleString();
+    document.getElementById('quickAddQty').value = 1;
+
+    // Reset variant selection
+    quickAddSelectedVariant = null;
+    quickAddVariants = [];
+
+    // Fetch variants
+    const variantRes = await fetchJson(`${apiBase}/variants.php?product_id=${productId}`);
+    if (variantRes.success && variantRes.variants && variantRes.variants.length > 0) {
+      quickAddVariants = variantRes.variants;
+      renderQuickAddVariants();
+      document.getElementById('quickAddVariantSection').style.display = 'block';
+    } else {
+      document.getElementById('quickAddVariantSection').style.display = 'none';
+    }
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('quickAddCartModal'));
+    modal.show();
+  } catch (err) {
+    console.error(err);
+    alert('Gagal memuat detail produk');
+  }
+}
+
+function renderQuickAddVariants() {
+  const sizeSection = document.getElementById('quickAddSizeSection');
+  const colorSection = document.getElementById('quickAddColorSection');
+  const sizeOptions = document.getElementById('quickAddSizeOptions');
+  const colorOptions = document.getElementById('quickAddColorOptions');
+
+  // Get unique sizes and colors
+  const sizes = [...new Set(quickAddVariants.filter(v => v.size_display).map(v => v.size_display))];
+  const colors = [...new Set(quickAddVariants.filter(v => v.color_display).map(v => v.color_display))];
+
+  // Render sizes
+  if (sizes.length > 0) {
+    sizeSection.style.display = 'block';
+    sizeOptions.innerHTML = sizes.map(s => `
+      <button type="button" class="btn btn-outline-secondary quick-size-btn" data-size="${escapeAttr(s)}">${escapeHtml(s)}</button>
+    `).join('');
+  } else {
+    sizeSection.style.display = 'none';
+  }
+
+  // Render colors  
+  if (colors.length > 0) {
+    colorSection.style.display = 'block';
+    colorOptions.innerHTML = colors.map(c => `
+      <button type="button" class="btn btn-outline-secondary quick-color-btn" data-color="${escapeAttr(c)}">${escapeHtml(c)}</button>
+    `).join('');
+  } else {
+    colorSection.style.display = 'none';
+  }
+
+  // Bind click handlers
+  sizeOptions.querySelectorAll('.quick-size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sizeOptions.querySelectorAll('.quick-size-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+      btn.classList.add('active', 'btn-primary');
+      btn.classList.remove('btn-outline-secondary');
+      updateQuickAddVariant();
+    });
+  });
+
+  colorOptions.querySelectorAll('.quick-color-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      colorOptions.querySelectorAll('.quick-color-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+      btn.classList.add('active', 'btn-primary');
+      btn.classList.remove('btn-outline-secondary');
+      updateQuickAddVariant();
+    });
+  });
+}
+
+function updateQuickAddVariant() {
+  const selectedSize = document.querySelector('.quick-size-btn.active')?.dataset.size || null;
+  const selectedColor = document.querySelector('.quick-color-btn.active')?.dataset.color || null;
+
+  // Find matching variant
+  quickAddSelectedVariant = quickAddVariants.find(v => {
+    const sizeMatch = !selectedSize || v.size_display === selectedSize;
+    const colorMatch = !selectedColor || v.color_display === selectedColor;
+    return sizeMatch && colorMatch;
+  });
+
+  const infoEl = document.getElementById('quickAddVariantInfo');
+  const infoText = document.getElementById('quickAddVariantInfoText');
+
+  if (quickAddSelectedVariant) {
+    infoEl.style.display = 'block';
+    infoText.textContent = `${quickAddSelectedVariant.size_display || ''} ${quickAddSelectedVariant.color_display || ''} - Stok: ${quickAddSelectedVariant.stock}`;
+  } else if (selectedSize || selectedColor) {
+    infoEl.style.display = 'block';
+    infoText.textContent = 'Kombinasi tidak tersedia';
+  } else {
+    infoEl.style.display = 'none';
+  }
+}
+
+// Initialize quick add modal handlers
+document.addEventListener('DOMContentLoaded', () => {
+  // Qty buttons
+  document.getElementById('quickAddQtyMinus')?.addEventListener('click', () => {
+    const input = document.getElementById('quickAddQty');
+    if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+  });
+
+  document.getElementById('quickAddQtyPlus')?.addEventListener('click', () => {
+    const input = document.getElementById('quickAddQty');
+    input.value = parseInt(input.value) + 1;
+  });
+
+  // Confirm add to cart
+  document.getElementById('quickAddConfirmBtn')?.addEventListener('click', () => {
+    if (!quickAddProduct) return;
+
+    // Check if variants exist but none selected
+    if (quickAddVariants.length > 0 && !quickAddSelectedVariant) {
+      alert('Pilih ukuran dan warna terlebih dahulu');
       return;
     }
 
-    const product = {
-      product_id: productId,
-      name: btn.dataset.name,
-      price: parseFloat(btn.dataset.price || 0),
-      image_url: btn.dataset.image
+    const qty = parseInt(document.getElementById('quickAddQty').value) || 1;
+
+    const cartItem = {
+      id: quickAddProduct.id,
+      name: quickAddProduct.name,
+      price: quickAddProduct.price,
+      quantity: qty
     };
-    addToCart(product);
+
+    if (quickAddSelectedVariant) {
+      cartItem.variant_id = quickAddSelectedVariant.id;
+    }
+
+    addToCart(cartItem);
+
+    // Close modal
+    const modalEl = document.getElementById('quickAddCartModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    modal?.hide();
   });
-}
+});
 
 // products
 let allProducts = []; // Cache for client-side filtering
