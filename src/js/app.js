@@ -199,6 +199,11 @@ async function showQuickAddModal(productId) {
     quickAddSelectedVariant = null;
     quickAddVariants = [];
 
+    // Reset variant info display
+    document.getElementById('quickAddVariantInfo').style.display = 'none';
+    document.getElementById('quickAddSizeOptions').innerHTML = '';
+    document.getElementById('quickAddColorOptions').innerHTML = '';
+
     // Fetch variants
     const variantRes = await fetchJson(`${apiBase}/variants.php?product_id=${productId}`);
     if (variantRes.success && variantRes.variants && variantRes.variants.length > 0) {
