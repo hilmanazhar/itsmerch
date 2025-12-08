@@ -832,8 +832,15 @@ function addToCart(product) {
 }
 
 function updateCartCount() {
-  const el = document.getElementById('cart-count'); if (!el) return;
-  const count = getCart().reduce((s, i) => s + (i.quantity || 1), 0); el.innerText = count;
+  const count = getCart().reduce((s, i) => s + (i.quantity || 1), 0);
+
+  // Update desktop cart count
+  const desktopEl = document.getElementById('cart-count');
+  if (desktopEl) desktopEl.innerText = count;
+
+  // Update mobile cart count
+  const mobileEl = document.getElementById('mobile-cart-count');
+  if (mobileEl) mobileEl.innerText = count;
 }
 
 function showCart() {
@@ -1056,3 +1063,43 @@ function createOrderNotification(userId, orderId, status) {
     }
   });
 }
+
+// Mobile cart button handler - ensures offcanvas opens on touch devices
+document.addEventListener('DOMContentLoaded', function () {
+  // Update cart count on page load
+  updateCartCount();
+
+  // Add explicit click handler for mobile cart button
+  const mobileCartBtn = document.querySelector('.mobile-header .cart-link');
+  if (mobileCartBtn) {
+    mobileCartBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      // Show cart content first
+      showCart();
+
+      // Open offcanvas using Bootstrap API
+      const cartDrawer = document.getElementById('cartDrawer');
+      if (cartDrawer) {
+        const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(cartDrawer);
+        offcanvas.show();
+      }
+    });
+  }
+
+  // Also handle desktop cart button the same way
+  const desktopCartBtn = document.getElementById('cartButton');
+  if (desktopCartBtn) {
+    desktopCartBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      showCart();
+
+      const cartDrawer = document.getElementById('cartDrawer');
+      if (cartDrawer) {
+        const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(cartDrawer);
+        offcanvas.show();
+      }
+    });
+  }
+});
+
