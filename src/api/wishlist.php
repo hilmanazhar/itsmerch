@@ -26,7 +26,7 @@ if ($method === 'GET') {
             SELECT w.id, w.product_id, w.created_at,
                    p.name, p.description, p.price, p.stock, p.image_url, p.category_id,
                    c.name as category_name
-            FROM wishlists w
+            FROM wishlist w
             JOIN products p ON w.product_id = p.id
             LEFT JOIN categories c ON p.category_id = c.id
             WHERE w.user_id = ?
@@ -59,7 +59,7 @@ if ($method === 'POST') {
     
     try {
         // Check if already in wishlist
-        $check = $pdo->prepare("SELECT id FROM wishlists WHERE user_id = ? AND product_id = ?");
+        $check = $pdo->prepare("SELECT id FROM wishlist WHERE user_id = ? AND product_id = ?");
         $check->execute([$user_id, $product_id]);
         
         if ($check->fetch()) {
@@ -67,7 +67,7 @@ if ($method === 'POST') {
             exit;
         }
         
-        $stmt = $pdo->prepare("INSERT INTO wishlists (user_id, product_id) VALUES (?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)");
         $result = $stmt->execute([$user_id, $product_id]);
         
         if ($result) {
@@ -97,7 +97,7 @@ if ($method === 'DELETE') {
     }
     
     try {
-        $stmt = $pdo->prepare("DELETE FROM wishlists WHERE user_id = ? AND product_id = ?");
+        $stmt = $pdo->prepare("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?");
         $result = $stmt->execute([$user_id, $product_id]);
         
         echo json_encode(['success' => true, 'message' => 'Removed from wishlist']);
