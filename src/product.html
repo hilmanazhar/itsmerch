@@ -367,11 +367,11 @@
                             ${variantHTML}
                             
                             ${!isAdmin ? `
-                            <div class="d-flex gap-3 mb-4">
-                                <div class="input-group" style="max-width: 150px;">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQty(-1)">-</button>
-                                    <input type="number" class="form-control text-center" id="qty" value="1" min="1" max="${product.stock}">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQty(1)">+</button>
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center" style="max-width: 150px;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQty(-1)" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">-</button>
+                                    <input type="number" class="form-control text-center border-secondary mx-1" id="qty" value="1" min="1" max="${product.stock}" style="width: 60px; height: 40px;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQty(1)" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">+</button>
                                 </div>
                             </div>
                             
