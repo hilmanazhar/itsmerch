@@ -441,14 +441,14 @@
                 return `
                     <div class="card bg-dark border-secondary mb-3 order-card ${order.displayStatus}">
                         <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-12 col-md-4 mb-3 mb-md-0">
-                                    <div class="d-flex align-items-start gap-3">
-                                        <div class="bg-primary bg-opacity-25 rounded p-2 d-none d-sm-block">
+                            <div class="row align-items-center g-3">
+                                <div class="col-12 col-md-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary bg-opacity-25 rounded p-2 d-none d-sm-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
                                             <i class="bi ${status.icon} fs-4 text-primary"></i>
                                         </div>
                                         <div>
-                                            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                            <div class="d-flex align-items-center gap-2 mb-1">
                                                 <strong class="text-white">#${order.id}</strong>
                                                 <span class="badge ${status.class} order-status-badge">${status.label}</span>
                                             </div>
@@ -457,23 +457,23 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-4 col-md-2">
-                                    <small class="text-muted d-block">Total</small>
+                                <div class="col-4 col-md-2 text-center">
+                                    <small class="text-muted d-block mb-1">Total</small>
                                     <strong class="text-white">Rp ${Number(order.total_amount).toLocaleString()}</strong>
                                 </div>
-                                <div class="col-4 col-md-2">
-                                    <small class="text-muted d-block">Kurir</small>
+                                <div class="col-4 col-md-2 text-center">
+                                    <small class="text-muted d-block mb-1">Kurir</small>
                                     <span class="text-uppercase">${order.shipping_courier || '-'}</span>
                                 </div>
                                 <div class="col-4 col-md-2 text-center">
+                                    <small class="text-muted d-block mb-1">Resi</small>
                                     ${order.tracking_number ?
-                        `<small class="text-muted d-block">Resi</small>
-                                        <span class="text-info">${order.tracking_number}</span>` :
-                        `<small class="text-muted">-</small>`}
+                        `<span class="text-info">${order.tracking_number}</span>` :
+                        `<span class="text-muted">-</span>`}
                                 </div>
-                                <div class="col-12 col-md-2 text-end mt-3 mt-md-0">
-                                    <div class="d-flex gap-2 justify-content-end">
-                                        <button class="btn btn-sm btn-outline-info" onclick="viewOrder(${order.id})">
+                                <div class="col-12 col-md-3 text-md-end">
+                                    <div class="d-flex gap-2 justify-content-center justify-content-md-end flex-wrap">
+                                        <button class="btn btn-sm btn-outline-info" onclick="viewOrder(${order.id})" title="Detail">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                         ${actionBtn}
