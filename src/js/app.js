@@ -251,7 +251,10 @@ function renderQuickAddVariants() {
   // Bind click handlers
   sizeOptions.querySelectorAll('.quick-size-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      sizeOptions.querySelectorAll('.quick-size-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+      sizeOptions.querySelectorAll('.quick-size-btn').forEach(b => {
+        b.classList.remove('active', 'btn-primary');
+        b.classList.add('btn-outline-secondary');
+      });
       btn.classList.add('active', 'btn-primary');
       btn.classList.remove('btn-outline-secondary');
       updateQuickAddVariant();
@@ -260,7 +263,10 @@ function renderQuickAddVariants() {
 
   colorOptions.querySelectorAll('.quick-color-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      colorOptions.querySelectorAll('.quick-color-btn').forEach(b => b.classList.remove('active', 'btn-primary'));
+      colorOptions.querySelectorAll('.quick-color-btn').forEach(b => {
+        b.classList.remove('active', 'btn-primary');
+        b.classList.add('btn-outline-secondary');
+      });
       btn.classList.add('active', 'btn-primary');
       btn.classList.remove('btn-outline-secondary');
       updateQuickAddVariant();
