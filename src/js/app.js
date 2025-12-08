@@ -283,23 +283,35 @@ function updateQuickAddVariant() {
   const selectedSize = document.querySelector('.quick-size-btn.active')?.dataset.size || null;
   const selectedColor = document.querySelector('.quick-color-btn.active')?.dataset.color || null;
 
-  // Find matching variant
-  quickAddSelectedVariant = quickAddVariants.find(v => {
-    const sizeMatch = !selectedSize || v.size_display === selectedSize;
-    const colorMatch = !selectedColor || v.color_display === selectedColor;
-    return sizeMatch && colorMatch;
-  });
+  // Check what variant types exist
+  const hasSizes = quickAddVariants.some(v => v.size_display);
+  const hasColors = quickAddVariants.some(v => v.color_display);
 
   const infoEl = document.getElementById('quickAddVariantInfo');
   const infoText = document.getElementById('quickAddVariantInfoText');
 
-  if (quickAddSelectedVariant) {
-    infoEl.style.display = 'block';
-    infoText.textContent = `${quickAddSelectedVariant.size_display || ''} ${quickAddSelectedVariant.color_display || ''} - Stok: ${quickAddSelectedVariant.stock}`;
-  } else if (selectedSize || selectedColor) {
-    infoEl.style.display = 'block';
-    infoText.textContent = 'Kombinasi tidak tersedia';
+  // Only find variant if all required selections are made
+  const sizeComplete = !hasSizes || selectedSize;
+  const colorComplete = !hasColors || selectedColor;
+
+  if (sizeComplete && colorComplete) {
+    // Find matching variant with exact match
+    quickAddSelectedVariant = quickAddVariants.find(v => {
+      const sizeMatch = !hasSizes || v.size_display === selectedSize;
+      const colorMatch = !hasColors || v.color_display === selectedColor;
+      return sizeMatch && colorMatch;
+    });
+
+    if (quickAddSelectedVariant) {
+      infoEl.style.display = 'block';
+      infoText.textContent = `${quickAddSelectedVariant.size_display || ''} ${quickAddSelectedVariant.color_display || ''} - Stok: ${quickAddSelectedVariant.stock}`;
+    } else {
+      infoEl.style.display = 'block';
+      infoText.textContent = 'Kombinasi tidak tersedia';
+    }
   } else {
+    // Not all selections made yet
+    quickAddSelectedVariant = null;
     infoEl.style.display = 'none';
   }
 }
@@ -365,6 +377,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalEl = document.getElementById('quickAddCartModal');
     const modal = bootstrap.Modal.getInstance(modalEl);
     modal?.hide();
+  });
+
+  // Wishlist button handler
+  document.getElementById('quickAddWishlistBtn')?.addEventListener('click', async () => {
+    if (!quickAddProduct) return;
+
+    const user = getUser();
+    if (!user) {
+      alert('Silakan login terlebih dahulu');
+      return;
+    }
+
+    try {
+      const res = await fetchJson(`${apiBase}/wishlist.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: user.id,
+          product_id: quickAddProduct.id
+        })
+      });
+
+      if (res.success) {
+        alert('Produk ditambahkan ke wishlist!');
+        // Update button to show filled heart
+        const btn = document.getElementById('quickAddWishlistBtn');
+        btn.classList.remove('btn-outline-danger');
+        btn.classList.add('btn-danger');
+        btn.innerHTML = '<i class="bi bi-heart-fill"></i>';
+      } else {
+        alert(res.error || 'Gagal menambahkan ke wishlist');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Gagal menambahkan ke wishlist');
+    }
   });
 });
 
