@@ -228,6 +228,26 @@ async function showQuickAddModal(productId) {
       document.getElementById('quickAddVariantSection').style.display = 'none';
     }
 
+    // Check if product is already in wishlist
+    const wishlistBtn = document.getElementById('quickAddWishlistBtn');
+    wishlistBtn.classList.remove('btn-danger');
+    wishlistBtn.classList.add('btn-outline-danger');
+    wishlistBtn.innerHTML = '<i class="bi bi-heart"></i>';
+
+    try {
+      const wishlistRes = await fetchJson(`${apiBase}/wishlist.php?user_id=${user.id}`);
+      if (wishlistRes.success && wishlistRes.items) {
+        const isInWishlist = wishlistRes.items.some(item => item.product_id == productId);
+        if (isInWishlist) {
+          wishlistBtn.classList.remove('btn-outline-danger');
+          wishlistBtn.classList.add('btn-danger');
+          wishlistBtn.innerHTML = '<i class="bi bi-heart-fill"></i>';
+        }
+      }
+    } catch (e) {
+      console.log('Could not check wishlist status');
+    }
+
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('quickAddCartModal'));
     modal.show();
