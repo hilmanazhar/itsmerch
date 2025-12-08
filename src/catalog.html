@@ -59,6 +59,16 @@
         .product-card .card-body > small:last-of-type {
             margin-top: auto;
         }
+
+        /* Hide number input spinners */
+        #quickAddQty::-webkit-outer-spin-button,
+        #quickAddQty::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        #quickAddQty {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 
