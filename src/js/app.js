@@ -182,6 +182,43 @@ function loadProducts(sort = 'newest', limit = 0) {
   const urlParams = new URLSearchParams(window.location.search);
   const sortParam = urlParams.get('sort') || sort;
 
+  // Special mode: load products per category (for homepage)
+  if (sortParam === 'per_category' && limit > 0) {
+    fetchJson(`${apiBase}/get_products.php?sort=newest`)
+      .then(data => {
+        allProducts = data;
+
+        // Group products by category
+        const byCategory = {};
+        data.forEach(p => {
+          const catId = p.category_id || 'none';
+          if (!byCategory[catId]) byCategory[catId] = [];
+          byCategory[catId].push(p);
+        });
+
+        // Get categories and calculate products per category
+        const categories = Object.keys(byCategory);
+        const productsPerCategory = Math.ceil(limit / categories.length);
+
+        // Take products from each category
+        let selectedProducts = [];
+        categories.forEach(catId => {
+          const catProducts = byCategory[catId].slice(0, productsPerCategory);
+          selectedProducts = selectedProducts.concat(catProducts);
+        });
+
+        // Limit to requested amount
+        selectedProducts = selectedProducts.slice(0, limit);
+
+        renderProductGrid(grid, selectedProducts);
+      })
+      .catch(err => {
+        console.error(err);
+        grid.innerHTML = '<div class="col-12 text-center text-danger">Gagal memuat produk.</div>';
+      });
+    return;
+  }
+
   fetchJson(`${apiBase}/get_products.php?sort=${sortParam}&limit=${limit}`)
     .then(data => {
       allProducts = data; // Cache
