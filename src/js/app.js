@@ -153,7 +153,21 @@ function bindUI() {
   if (loginForm) loginForm.addEventListener('submit', onLogin);
 
   const cartBtn = document.getElementById('cartButton');
-  if (cartBtn) cartBtn.addEventListener('click', (e) => { e.preventDefault(); showCart(); });
+  if (cartBtn) {
+    cartBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cartDrawer = document.getElementById('cartDrawer');
+      if (cartDrawer) {
+        const offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(cartDrawer);
+        // Toggle - if visible hide, if hidden show
+        if (cartDrawer.classList.contains('show')) {
+          offcanvasInstance.hide();
+        } else {
+          showCart();
+        }
+      }
+    });
+  }
 
   // delegate add-to-cart - show quick add modal
   document.addEventListener('click', (e) => {
@@ -379,39 +393,57 @@ document.addEventListener('DOMContentLoaded', () => {
     modal?.hide();
   });
 
-  // Wishlist button handler
+  // Wishlist button handler - toggle add/remove
   document.getElementById('quickAddWishlistBtn')?.addEventListener('click', async () => {
     if (!quickAddProduct) return;
 
     const user = getUser();
     if (!user) {
-      alert('Silakan login terlebih dahulu');
+      showToast('Silakan login terlebih dahulu');
       return;
     }
 
-    try {
-      const res = await fetchJson(`${apiBase}/wishlist.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: user.id,
-          product_id: quickAddProduct.id
-        })
-      });
+    const btn = document.getElementById('quickAddWishlistBtn');
+    const isInWishlist = btn.classList.contains('btn-danger');
 
-      if (res.success) {
-        alert('Produk ditambahkan ke wishlist!');
-        // Update button to show filled heart
-        const btn = document.getElementById('quickAddWishlistBtn');
-        btn.classList.remove('btn-outline-danger');
-        btn.classList.add('btn-danger');
-        btn.innerHTML = '<i class="bi bi-heart-fill"></i>';
+    try {
+      if (isInWishlist) {
+        // Remove from wishlist
+        const res = await fetchJson(`${apiBase}/wishlist.php?user_id=${user.id}&product_id=${quickAddProduct.id}`, {
+          method: 'DELETE'
+        });
+
+        if (res.success) {
+          showToast('Dihapus dari wishlist');
+          btn.classList.remove('btn-danger');
+          btn.classList.add('btn-outline-danger');
+          btn.innerHTML = '<i class="bi bi-heart"></i>';
+        } else {
+          showToast(res.error || 'Gagal menghapus dari wishlist');
+        }
       } else {
-        alert(res.error || 'Gagal menambahkan ke wishlist');
+        // Add to wishlist
+        const res = await fetchJson(`${apiBase}/wishlist.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: user.id,
+            product_id: quickAddProduct.id
+          })
+        });
+
+        if (res.success) {
+          showToast('Ditambahkan ke wishlist');
+          btn.classList.remove('btn-outline-danger');
+          btn.classList.add('btn-danger');
+          btn.innerHTML = '<i class="bi bi-heart-fill"></i>';
+        } else {
+          showToast(res.error || 'Gagal menambahkan ke wishlist');
+        }
       }
     } catch (err) {
       console.error(err);
-      alert('Gagal menambahkan ke wishlist');
+      showToast('Terjadi kesalahan');
     }
   });
 });
