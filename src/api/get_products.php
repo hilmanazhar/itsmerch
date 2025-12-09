@@ -28,33 +28,50 @@ if ($id > 0) {
     }
 } else {
     // List products with category filter
-    $sql = "SELECT p.id, p.name, p.description, p.image_url, p.price, p.stock, p.category_id,
-                   c.name as category_name, c.slug as category_slug
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id";
-    
-    $whereClause = "";
     $params = [];
     $types = "";
     
-    // Category filter
-    if ($category_id > 0) {
-        $whereClause = " WHERE p.category_id = ?";
-        $params[] = $category_id;
-        $types .= "i";
-    }
-    
-    $sql .= $whereClause;
-    
-    // Sorting
+    // Build SQL based on sort type
     if ($sort === 'bestseller') {
-        $sql .= " ORDER BY RAND()"; 
-    } elseif ($sort === 'price_low') {
-        $sql .= " ORDER BY p.price ASC";
-    } elseif ($sort === 'price_high') {
-        $sql .= " ORDER BY p.price DESC";
+        // Special query for bestseller that includes total sold calculation
+        $sql = "SELECT p.id, p.name, p.description, p.image_url, p.price, p.stock, p.category_id,
+                       c.name as category_name, c.slug as category_slug,
+                       COALESCE(SUM(od.quantity), 0) as total_sold
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                LEFT JOIN order_details od ON p.id = od.product_id
+                LEFT JOIN orders o ON od.order_id = o.id AND o.status = 'completed'";
+        
+        // Apply category filter if exists
+        if ($category_id > 0) {
+            $sql .= " WHERE p.category_id = ?";
+            $params[] = $category_id;
+            $types .= "i";
+        }
+        
+        $sql .= " GROUP BY p.id ORDER BY total_sold DESC";
     } else {
-        $sql .= " ORDER BY p.id DESC"; // Newest
+        // Regular query for other sorting options
+        $sql = "SELECT p.id, p.name, p.description, p.image_url, p.price, p.stock, p.category_id,
+                       c.name as category_name, c.slug as category_slug
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id";
+        
+        // Category filter
+        if ($category_id > 0) {
+            $sql .= " WHERE p.category_id = ?";
+            $params[] = $category_id;
+            $types .= "i";
+        }
+        
+        // Sorting
+        if ($sort === 'price_low') {
+            $sql .= " ORDER BY p.price ASC";
+        } elseif ($sort === 'price_high') {
+            $sql .= " ORDER BY p.price DESC";
+        } else {
+            $sql .= " ORDER BY p.id DESC"; // Newest
+        }
     }
 
     if ($limit > 0) {
