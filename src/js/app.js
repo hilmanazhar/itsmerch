@@ -576,8 +576,8 @@ function renderProductGrid(container, products) {
   }
 
   html += products.map(p => {
-    // Use flexible col for admin dashboard, fixed col-md-3 for user views
-    const colClass = isAdminGrid ? 'col' : 'col-md-3 mb-4';
+    // Use col-md-3 for all grids (4 per row on desktop)
+    const colClass = 'col-md-3 mb-4';
     return `
     <div class="${colClass}">
       <div class="card product-card h-100">
@@ -708,7 +708,7 @@ async function addNewVariantsFromEdit() {
 
   const sizesText = document.getElementById('editNewSizes')?.value || '';
   const colorsText = document.getElementById('editNewColors')?.value || '';
-  const stock = parseInt(document.getElementById('editNewStock')?.value || 10);
+  const totalStock = parseInt(document.getElementById('editNewStock')?.value || 10);
 
   if (!sizesText && !colorsText) {
     alert('Masukkan ukuran atau warna');
@@ -717,6 +717,18 @@ async function addNewVariantsFromEdit() {
 
   const sizes = sizesText.split(',').map(s => s.trim()).filter(s => s);
   const colors = colorsText.split(',').map(c => c.trim()).filter(c => c);
+
+  // Calculate total combinations for stock distribution
+  let totalCombinations = 1;
+  if (sizes.length > 0 && colors.length > 0) {
+    totalCombinations = sizes.length * colors.length;
+  } else if (sizes.length > 0) {
+    totalCombinations = sizes.length;
+  } else if (colors.length > 0) {
+    totalCombinations = colors.length;
+  }
+
+  const stockPerVariant = Math.floor(totalStock / totalCombinations);
 
   // If only sizes or only colors, create simple variants
   if (sizes.length === 0) sizes.push('');
@@ -732,7 +744,7 @@ async function addNewVariantsFromEdit() {
             product_id: currentEditProductId,
             size_text: size,
             color_text: color,
-            stock: stock
+            stock: stockPerVariant
           }
         });
         if (res.success) created++;
@@ -743,7 +755,7 @@ async function addNewVariantsFromEdit() {
   }
 
   if (created > 0) {
-    showToast(`${created} varian ditambahkan`);
+    showToast(`${created} varian ditambahkan (stok ${stockPerVariant}/varian)`);
     loadEditVariants(currentEditProductId);
     // Clear inputs
     document.getElementById('editNewSizes').value = '';
@@ -859,6 +871,10 @@ async function createProductVariantsFromText(productId, sizes, colors, stock) {
 
   // If both sizes and colors provided, create all combinations
   if (sizes.length > 0 && colors.length > 0) {
+    // Calculate total combinations and distribute stock evenly
+    const totalCombinations = sizes.length * colors.length;
+    const stockPerVariant = Math.floor(stock / totalCombinations);
+
     for (const size of sizes) {
       for (const color of colors) {
         promises.push(fetchJson(`${apiBase}/variants.php`, {
@@ -867,27 +883,29 @@ async function createProductVariantsFromText(productId, sizes, colors, stock) {
             product_id: productId,
             size_text: size,
             color_text: color,
-            stock: stock
+            stock: stockPerVariant
           }
         }));
       }
     }
   }
-  // Only sizes
+  // Only sizes - distribute stock across sizes
   else if (sizes.length > 0) {
+    const stockPerVariant = Math.floor(stock / sizes.length);
     for (const size of sizes) {
       promises.push(fetchJson(`${apiBase}/variants.php`, {
         method: 'POST',
-        body: { product_id: productId, size_text: size, stock: stock }
+        body: { product_id: productId, size_text: size, stock: stockPerVariant }
       }));
     }
   }
-  // Only colors
+  // Only colors - distribute stock across colors
   else if (colors.length > 0) {
+    const stockPerVariant = Math.floor(stock / colors.length);
     for (const color of colors) {
       promises.push(fetchJson(`${apiBase}/variants.php`, {
         method: 'POST',
-        body: { product_id: productId, color_text: color, stock: stock }
+        body: { product_id: productId, color_text: color, stock: stockPerVariant }
       }));
     }
   }
