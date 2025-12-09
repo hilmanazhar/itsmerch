@@ -687,8 +687,8 @@
                 document.getElementById('adminDashboard').style.display = 'block';
                 document.getElementById('userContent').style.display = 'none';
                 loadAdminDashboard();
-                // Load products for admin product grid
-                loadProducts('latest', 6, 'admin-product-grid');
+                // Load products for admin product grid (4 products = 1 row)
+                loadProducts('latest', 4, 'admin-product-grid');
             } else {
                 loadProducts('per_category', 4);
             }

@@ -390,9 +390,27 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Kombinasi ukuran dan warna tidak tersedia');
         return;
       }
+
+      // Check if variant has stock
+      if (quickAddSelectedVariant.stock <= 0) {
+        alert('Stok untuk varian ini habis');
+        return;
+      }
     }
 
     const qty = parseInt(document.getElementById('quickAddQty').value) || 1;
+
+    // Check stock for non-variant products
+    if (quickAddVariants.length === 0 && quickAddProduct.stock <= 0) {
+      alert('Stok produk ini habis');
+      return;
+    }
+
+    // If has variant, check qty against variant stock
+    if (quickAddSelectedVariant && qty > quickAddSelectedVariant.stock) {
+      alert(`Stok tidak mencukupi. Tersedia: ${quickAddSelectedVariant.stock}`);
+      return;
+    }
 
     const cartItem = {
       id: quickAddProduct.id,
@@ -708,7 +726,8 @@ async function addNewVariantsFromEdit() {
 
   const sizesText = document.getElementById('editNewSizes')?.value || '';
   const colorsText = document.getElementById('editNewColors')?.value || '';
-  const totalStock = parseInt(document.getElementById('editNewStock')?.value || 10);
+  // Stock ini adalah stok PER VARIAN yang akan dibuat
+  const stockPerVariant = parseInt(document.getElementById('editNewStock')?.value || 10);
 
   if (!sizesText && !colorsText) {
     alert('Masukkan ukuran atau warna');
@@ -717,18 +736,6 @@ async function addNewVariantsFromEdit() {
 
   const sizes = sizesText.split(',').map(s => s.trim()).filter(s => s);
   const colors = colorsText.split(',').map(c => c.trim()).filter(c => c);
-
-  // Calculate total combinations for stock distribution
-  let totalCombinations = 1;
-  if (sizes.length > 0 && colors.length > 0) {
-    totalCombinations = sizes.length * colors.length;
-  } else if (sizes.length > 0) {
-    totalCombinations = sizes.length;
-  } else if (colors.length > 0) {
-    totalCombinations = colors.length;
-  }
-
-  const stockPerVariant = Math.floor(totalStock / totalCombinations);
 
   // If only sizes or only colors, create simple variants
   if (sizes.length === 0) sizes.push('');
@@ -866,15 +873,12 @@ async function createProductVariants(productId, selectedSizes, selectedColors, s
 }
 
 // Create variants from comma-separated text (for simplified admin input)
-async function createProductVariantsFromText(productId, sizes, colors, stock) {
+// Stock parameter is the stock PER VARIANT (not total to be divided)
+async function createProductVariantsFromText(productId, sizes, colors, stockPerVariant) {
   const promises = [];
 
   // If both sizes and colors provided, create all combinations
   if (sizes.length > 0 && colors.length > 0) {
-    // Calculate total combinations and distribute stock evenly
-    const totalCombinations = sizes.length * colors.length;
-    const stockPerVariant = Math.floor(stock / totalCombinations);
-
     for (const size of sizes) {
       for (const color of colors) {
         promises.push(fetchJson(`${apiBase}/variants.php`, {
@@ -889,9 +893,8 @@ async function createProductVariantsFromText(productId, sizes, colors, stock) {
       }
     }
   }
-  // Only sizes - distribute stock across sizes
+  // Only sizes
   else if (sizes.length > 0) {
-    const stockPerVariant = Math.floor(stock / sizes.length);
     for (const size of sizes) {
       promises.push(fetchJson(`${apiBase}/variants.php`, {
         method: 'POST',
@@ -899,9 +902,8 @@ async function createProductVariantsFromText(productId, sizes, colors, stock) {
       }));
     }
   }
-  // Only colors - distribute stock across colors
+  // Only colors
   else if (colors.length > 0) {
-    const stockPerVariant = Math.floor(stock / colors.length);
     for (const color of colors) {
       promises.push(fetchJson(`${apiBase}/variants.php`, {
         method: 'POST',
