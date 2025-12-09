@@ -73,12 +73,22 @@ if ($id > 0) {
     $res = $stmt->get_result();
     $products = [];
     while ($row = $res->fetch_assoc()) {
-        // Check if product has variants
-        $variantCheck = $mysqli->prepare("SELECT COUNT(*) as cnt FROM product_variants WHERE product_id = ?");
+        // Check if product has variants and get total variant stock
+        $variantCheck = $mysqli->prepare("
+            SELECT COUNT(*) as cnt, COALESCE(SUM(stock), 0) as total_stock 
+            FROM product_variants 
+            WHERE product_id = ? AND is_active = 1
+        ");
         $variantCheck->bind_param('i', $row['id']);
         $variantCheck->execute();
         $variantResult = $variantCheck->get_result()->fetch_assoc();
         $row['has_variants'] = ($variantResult['cnt'] > 0);
+        
+        // If product has variants, use sum of variant stocks as the display stock
+        if ($row['has_variants'] && $variantResult['total_stock'] > 0) {
+            $row['stock'] = intval($variantResult['total_stock']);
+        }
+        
         $variantCheck->close();
         
         $products[] = $row;
