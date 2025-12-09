@@ -1149,7 +1149,7 @@ function showUserState() {
       <div class="mt-auto">
         <ul class="nav flex-column nav-pills">
           <li class="nav-item">
-            <button id="logoutBtn" class="nav-link btn btn-link text-danger text-start w-100 ps-3"><i class="bi bi-box-arrow-left"></i> Logout</button>
+            <a class="nav-link border border-danger text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</a>
           </li>
           <li class="nav-item">
             <a class="nav-link ${currentPage === 'about' ? 'active' : ''}" href="/about"><i class="bi bi-info-circle"></i> Tentang</a>
@@ -1157,7 +1157,7 @@ function showUserState() {
         </ul>
       </div>
     `;
-    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); logout(); });
     return;
   }
 
@@ -1191,11 +1191,11 @@ function showUserState() {
       </ul>
       <div class="mt-auto">
         <ul class="nav flex-column nav-pills">
-          <li class="nav-item px-3 pt-2">
-            <small class="text-white">Hi, ${escapeHtml(user.name)}</small>
+          <li class="nav-item">
+            <span class="nav-link text-info py-2"><i class="bi bi-person-circle"></i> Hi, ${escapeHtml(user.name)}</span>
           </li>
           <li class="nav-item">
-            <button id="logoutBtn" class="nav-link btn btn-link text-danger text-start w-100 ps-3"><i class="bi bi-box-arrow-left"></i> Logout</button>
+            <a class="nav-link border border-danger text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</a>
           </li>
           <li class="nav-item">
             <a class="nav-link ${currentPage === 'about' ? 'active' : ''}" href="/about"><i class="bi bi-info-circle"></i> Tentang</a>
@@ -1203,7 +1203,7 @@ function showUserState() {
         </ul>
       </div>
     `;
-    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); logout(); });
     // Rebind cart button click
     const newCartBtn = document.getElementById('cartButton');
     if (newCartBtn) newCartBtn.addEventListener('click', (e) => { e.preventDefault(); showCart(); });
