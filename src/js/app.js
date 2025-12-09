@@ -706,7 +706,7 @@ function loadEditVariants(productId) {
             <small class="fw-bold">${escapeHtml(v.size_display || '-')} / ${escapeHtml(v.color_display || '-')}</small>
           </div>
           <div class="d-flex align-items-center gap-2">
-            <input type="number" class="form-control form-control-sm" style="width:60px" 
+            <input type="number" class="form-control form-control-sm no-spinner" style="width:60px" 
                    value="${v.stock}" min="0" onchange="updateVariantStock(${v.id}, this.value)">
             <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteVariant(${v.id})">
               <i class="bi bi-trash"></i>
