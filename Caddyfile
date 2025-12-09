@@ -32,7 +32,7 @@
     # Try files with .html extension for clean URLs
     @cleanurls {
         not path /api/*
-        not path_regexp \.(css|js|jpg|jpeg|png|gif|svg|ico|woff|woff2|ttf|eot|json|pdf)$
+        not path_regexp \.(css|js|jpg|jpeg|png|gif|svg|ico|webp|avif|woff|woff2|ttf|eot|json|pdf|xml|txt)$
         file {path}.html
     }
     rewrite @cleanurls {path}.html
