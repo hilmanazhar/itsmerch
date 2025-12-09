@@ -96,7 +96,7 @@ function downloadInvoice(orderId) {
   window.open(`${apiBase}/invoice.php?order_id=${orderId}&user_id=${user.id}`, '_blank');
 }
 
-function fetchJson(url, opts = {}) {
+function fetchJson(url, opts = {}, retries = 2) {
   // Check for file protocol
   if (window.location.protocol === 'file:') {
     alert('Error: Aplikasi ini harus dijalankan melalui server (localhost), bukan dibuka langsung sebagai file.');
@@ -109,8 +109,15 @@ function fetchJson(url, opts = {}) {
     opts.body = JSON.stringify(opts.body);
     opts.headers['Content-Type'] = 'application/json';
   }
+
+  // Add timeout to prevent hanging
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+  opts.signal = controller.signal;
+
   return fetch(url, opts)
     .then(r => {
+      clearTimeout(timeoutId);
       return r.text().then(text => {
         try {
           const json = JSON.parse(text);
@@ -127,6 +134,17 @@ function fetchJson(url, opts = {}) {
           throw new Error('Invalid JSON response');
         }
       });
+    })
+    .catch(err => {
+      clearTimeout(timeoutId);
+      // Retry on timeout or network errors
+      if (retries > 0 && (err.name === 'AbortError' || err.message.includes('Network'))) {
+        console.log(`Retrying ${url}... (${retries} retries left)`);
+        return new Promise(resolve => setTimeout(resolve, 500)).then(() => {
+          return fetchJson(url, { ...opts, signal: undefined }, retries - 1);
+        });
+      }
+      throw err;
     });
 }
 
