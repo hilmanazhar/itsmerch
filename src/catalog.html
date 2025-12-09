@@ -471,6 +471,13 @@
                                     <span class="badge bg-primary" id="editVariantCount">0</span>
                                 </div>
                                 <div class="card-body" style="max-height: 250px; overflow-y: auto;">
+                                    <!-- Stock input for non-variant products (shown when no variants) -->
+                                    <div id="editNoVariantStock" style="display: none;">
+                                        <label class="form-label">Stok Produk</label>
+                                        <input type="number" class="form-control" id="editBaseStock" min="0" value="0">
+                                        <small class="text-muted">Stok untuk produk tanpa varian</small>
+                                    </div>
+                                    <!-- Variant list (shown when has variants) -->
                                     <div id="editVariantList">
                                         <p class="text-muted small text-center">Loading...</p>
                                     </div>

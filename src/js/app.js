@@ -646,6 +646,12 @@ function editProduct(id) {
     f.stock.value = p.stock;
     f.image_url.value = p.image_url || '';
 
+    // Also populate base stock input for non-variant products
+    const baseStockInput = document.getElementById('editBaseStock');
+    if (baseStockInput) {
+      baseStockInput.value = p.stock;
+    }
+
     // Load variants for this product
     loadEditVariants(id);
 
@@ -657,6 +663,8 @@ function editProduct(id) {
 function loadEditVariants(productId) {
   const listEl = document.getElementById('editVariantList');
   const countEl = document.getElementById('editVariantCount');
+  const noVariantStockEl = document.getElementById('editNoVariantStock');
+  const baseStockInput = document.getElementById('editBaseStock');
 
   if (!listEl) return;
 
@@ -667,7 +675,17 @@ function loadEditVariants(productId) {
       if (!res.success || !res.variants || res.variants.length === 0) {
         listEl.innerHTML = '<p class="text-muted small text-center">Tidak ada varian</p>';
         countEl.textContent = '0';
+
+        // Show stock input for non-variant product
+        if (noVariantStockEl) {
+          noVariantStockEl.style.display = 'block';
+        }
         return;
+      }
+
+      // Hide stock input since product has variants
+      if (noVariantStockEl) {
+        noVariantStockEl.style.display = 'none';
       }
 
       countEl.textContent = res.variants.length;
@@ -979,6 +997,16 @@ document.addEventListener('DOMContentLoaded', () => {
     editForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(e.target));
+
+      // If product has no variants, use the editBaseStock value
+      const noVariantStockEl = document.getElementById('editNoVariantStock');
+      if (noVariantStockEl && noVariantStockEl.style.display !== 'none') {
+        const baseStockInput = document.getElementById('editBaseStock');
+        if (baseStockInput) {
+          data.stock = baseStockInput.value;
+        }
+      }
+
       fetchJson(`${apiBase}/admin_update_product.php`, { method: 'POST', body: data })
         .then(res => {
           if (res.success) {
