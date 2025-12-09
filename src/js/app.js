@@ -152,7 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
   bindUI();
 
   // Load products if on catalog or home
-  loadProducts();
+  // Skip if on catalog page as catalog.html has its own loadProductsWithCategory()
+  if (document.getElementById('product-grid') && !window.location.pathname.includes('catalog')) {
+    loadProducts();
+  }
 
   const user = getUser();
   showUserState(); // Always call this to set initial state (hide/show cart)
