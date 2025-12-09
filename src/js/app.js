@@ -562,9 +562,11 @@ function renderProductGrid(container, products) {
 
   const user = getUser();
   const isAdmin = user && user.role === 'admin';
+  const isAdminGrid = container.id === 'admin-product-grid';
 
   let html = '';
-  if (isAdmin) {
+  // Only show "Tambah Produk" for catalog page (product-grid), not admin dashboard
+  if (isAdmin && container.id === 'product-grid') {
     html += `
       <div class="col-12 mb-4 text-end">
           <button class="btn btn-success" onclick="showAddProductModal()">
@@ -574,13 +576,13 @@ function renderProductGrid(container, products) {
   }
 
   html += products.map(p => `
-    <div class="col-md-3 mb-4">
-      <div class="card product-card">
+    <div class="col">
+      <div class="card product-card h-100">
         <a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit">
             <img src="${getProductImage(p.image_url, p.name)}" class="card-img-top" alt="${escapeHtml(p.name)}"
                  onerror="this.onerror=null; this.src=generatePlaceholder('${escapeAttr(p.name)}');">
             <div class="card-body">
-            <h5 class="card-title">${escapeHtml(p.name)}</h5>
+            <h5 class="card-title text-truncate">${escapeHtml(p.name)}</h5>
             <p class="text-info fw-bold mb-1">Rp ${Number(p.price).toLocaleString()}</p>
             <small class="d-block mb-2 text-muted">Stok: ${p.stock}</small>
             </div>
