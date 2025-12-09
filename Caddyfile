@@ -24,7 +24,10 @@
         path *.html
         not path /index.html
     }
-    redir @htmlext {path_regexp \.html$} 301
+    route @htmlext {
+        uri strip_suffix .html
+        redir {uri} 301
+    }
     
     # Try files with .html extension for clean URLs
     @cleanurls {
