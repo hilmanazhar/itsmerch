@@ -74,46 +74,44 @@
             appearance: textfield;
         }
 
-        /* Edit Product Modal - Fix Scroll Behavior */
-        /* Set fixed height for modal body to constrain panels */
+        /* Edit Product Modal - Improved Scroll Behavior */
+        /* Enable page-level scroll in modal body */
         #editProductModal .modal-body,
         #addProductModal .modal-body {
             max-height: 70vh;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         /* Align panels at the top with stretch */
         #editProductModal .row.g-3,
         #addProductModal .row.g-3 {
             align-items: stretch;
-            height: 100%;
         }
 
-        /* Left panel: sticky positioning to stay in place */
+        /* Left panel: sticky positioning after scrolling to align borders */
         #editProductModal .col-md-6.d-flex.flex-column:first-child,
         #addProductModal .col-md-6.d-flex.flex-column:first-child {
             position: sticky;
-            top: 0;
+            top: 1rem;
             align-self: flex-start;
-            max-height: 70vh;
-            overflow-y: auto;
         }
 
-        /* Right panel: set same max-height */
+        /* Right panel: allow natural height with internal scroll */
         #editProductModal .col-md-6.d-flex.flex-column:last-child,
         #addProductModal .col-md-6.d-flex.flex-column:last-child {
-            max-height: 70vh;
+            min-height: fit-content;
         }
 
-        /* Make the variant card fill available height */
+        /* Make the variant card flexible */
         #editProductModal .card.flex-grow-1,
         #addProductModal .card.flex-grow-1 {
-            height: 100%;
             display: flex;
             flex-direction: column;
+            max-height: calc(70vh - 2rem);
         }
 
-        /* Card body should scroll internally */
+        /* Card body should scroll internally when content exceeds max height */
         #editProductModal .card-body.flex-grow-1,
         #addProductModal .card-body.flex-grow-1 {
             overflow-y: auto;
