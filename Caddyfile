@@ -19,6 +19,9 @@
     # Handle static files
     file_server
     
+    # Rewrite /home to index.html
+    rewrite /home /index.html
+    
     # Try files with .html extension, then index.html
     try_files {path} {path}.html {path}/ /index.html
     
