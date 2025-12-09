@@ -73,6 +73,36 @@
             -moz-appearance: textfield;
             appearance: textfield;
         }
+
+        /* Edit Product Modal - Panel Height Alignment */
+        #editProductModal .row.g-3,
+        #addProductModal .row.g-3 {
+            align-items: stretch;
+        }
+
+        #editProductModal .col-md-6.d-flex.flex-column,
+        #addProductModal .col-md-6.d-flex.flex-column {
+            min-height: 0;
+        }
+
+        /* Make the variant card match the left panel height */
+        #editProductModal .card.flex-grow-1,
+        #addProductModal .card.flex-grow-1 {
+            height: 100%;
+        }
+
+        /* Constrain card-body to enable internal scrolling */
+        #editProductModal .card-body.flex-grow-1,
+        #addProductModal .card-body.flex-grow-1 {
+            max-height: 100%;
+            min-height: 0;
+        }
+
+        /* Ensure variant list scrolls when content overflows */
+        #editProductModal #editVariantList {
+            overflow-y: auto;
+            min-height: 0;
+        }
     </style>
 </head>
 
