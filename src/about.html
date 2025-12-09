@@ -105,7 +105,8 @@
                         <a class="nav-link" href="/catalog"><i class="bi bi-box"></i> Katalog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/about"><i class="bi bi-info-circle"></i> Tentang Kami</a>
+                        <a id="cartButton" class="nav-link" href="#"><i class="bi bi-cart"></i> Keranjang <span
+                                class="badge ms-2 rounded-pill" id="cart-count">0</span></a>
                     </li>
                 </ul>
                 <div class="mt-auto">
@@ -113,6 +114,9 @@
                         <li class="nav-item" id="loginNavItem">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i
                                     class="bi bi-box-arrow-in-right"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/about"><i class="bi bi-info-circle"></i> Tentang</a>
                         </li>
                     </ul>
                     <div id="userBadge" class="mt-3 p-3 rounded bg-dark bg-opacity-50 text-center small fade-in"

@@ -1146,8 +1146,15 @@ function showUserState() {
           <a class="nav-link ${currentPage === 'coupons-admin' ? 'active' : ''}" href="/coupons-admin"><i class="bi bi-ticket-perforated"></i> Kelola Kupon</a>
         </li>
       </ul>
-      <div class="mt-auto p-3">
-        <button id="logoutBtn" class="btn btn-outline-danger w-100">Logout</button>
+      <div class="mt-auto">
+        <ul class="nav flex-column nav-pills">
+          <li class="nav-item">
+            <button id="logoutBtn" class="nav-link btn btn-link text-danger text-start w-100 ps-3"><i class="bi bi-box-arrow-left"></i> Logout</button>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link ${currentPage === 'about' ? 'active' : ''}" href="/about"><i class="bi bi-info-circle"></i> Tentang</a>
+          </li>
+        </ul>
       </div>
     `;
     document.getElementById('logoutBtn').addEventListener('click', logout);
@@ -1182,9 +1189,18 @@ function showUserState() {
           <a class="nav-link ${currentPage === 'profile' ? 'active' : ''}" href="/profile"><i class="bi bi-person"></i> Profil</a>
         </li>
       </ul>
-      <div class="mt-auto p-3">
-        <div class="text-white text-center mb-2"><small>Hi, ${escapeHtml(user.name)}</small></div>
-        <button id="logoutBtn" class="btn btn-sm btn-outline-danger w-100">Logout</button>
+      <div class="mt-auto">
+        <ul class="nav flex-column nav-pills">
+          <li class="nav-item px-3 pt-2">
+            <small class="text-white">Hi, ${escapeHtml(user.name)}</small>
+          </li>
+          <li class="nav-item">
+            <button id="logoutBtn" class="nav-link btn btn-link text-danger text-start w-100 ps-3"><i class="bi bi-box-arrow-left"></i> Logout</button>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link ${currentPage === 'about' ? 'active' : ''}" href="/about"><i class="bi bi-info-circle"></i> Tentang</a>
+          </li>
+        </ul>
       </div>
     `;
     document.getElementById('logoutBtn').addEventListener('click', logout);
