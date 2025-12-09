@@ -79,63 +79,63 @@
             <!-- Main Content -->
             <main class="col-md-10 px-4">
                 <!-- Admin Dashboard (hidden by default, shown for admin) -->
-                <div id="adminDashboard" style="display: none;" class="pt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                <div id="adminDashboard" style="display: none;">
+                    <!-- Admin Hero Section -->
+                    <div class="hero-gradient text-white mt-4" data-aos="fade-up">
+                        <div class="row align-items-center position-relative" style="z-index: 2;">
+                            <div class="col-md-7">
+                                <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold shadow-sm">
+                                    Admin Panel
+                                </span>
+                                <h1 class="display-4 fw-bold mb-3">Selamat Datang,<br>Admin!</h1>
+                                <p class="fs-5 mb-4 text-white-50">Kelola toko merchandise ITS Anda dengan mudah. Pantau penjualan, pesanan, dan stok produk.</p>
+                                <div class="d-flex gap-3">
+                                    <a href="catalog.html" class="btn btn-light text-primary fw-bold px-4 py-3 rounded-pill shadow-sm">
+                                        <i class="bi bi-box-seam me-2"></i>Kelola Produk
+                                    </a>
+                                    <a href="orders.html" class="btn btn-outline-light fw-bold px-4 py-3 rounded-pill">
+                                        Kelola Pesanan
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-5 d-none d-md-block text-center">
+                                <img src="assets/images/hero-banner.jpg" alt="Admin Dashboard"
+                                    class="img-fluid rounded-circle shadow-lg"
+                                    style="border: 4px solid rgba(255,255,255,0.2); width: 350px; height: 350px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Kelola Produk Anda -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 mt-5" data-aos="fade-right">
                         <div>
-                            <h2 class="fw-bold text-white mb-1">Dashboard Admin</h2>
-                            <p class="text-muted mb-0">Selamat datang kembali! Berikut ringkasan toko Anda.</p>
+                            <h3 class="fw-bold mb-0"><i class="bi bi-box-seam me-2 text-primary"></i>Kelola Produk Anda</h3>
+                            <p class="text-muted small mb-0">Edit, update, atau tambah produk baru</p>
                         </div>
-                        <button onclick="loadAdminDashboard()" class="btn btn-outline-info btn-sm">
-                            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-                        </button>
+                        <a href="catalog.html" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                            Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
                     </div>
-
-                    <!-- Quick Actions -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-6 col-md-3">
-                            <a href="catalog.html" class="text-decoration-none">
-                                <div class="card bg-dark border-secondary text-white h-100 hover-lift">
-                                    <div class="card-body text-center py-4">
-                                        <i class="bi bi-box-seam fs-2 text-primary mb-2 d-block"></i>
-                                        <span class="fw-semibold">Katalog Produk</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <a href="orders.html" class="text-decoration-none">
-                                <div class="card bg-dark border-secondary text-white h-100 hover-lift">
-                                    <div class="card-body text-center py-4">
-                                        <i class="bi bi-clipboard-check fs-2 text-info mb-2 d-block"></i>
-                                        <span class="fw-semibold">Kelola Pesanan</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <a href="coupons-admin.html" class="text-decoration-none">
-                                <div class="card bg-dark border-secondary text-white h-100 hover-lift">
-                                    <div class="card-body text-center py-4">
-                                        <i class="bi bi-ticket-perforated fs-2 text-warning mb-2 d-block"></i>
-                                        <span class="fw-semibold">Kelola Kupon</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <a href="profile.html" class="text-decoration-none">
-                                <div class="card bg-dark border-secondary text-white h-100 hover-lift">
-                                    <div class="card-body text-center py-4">
-                                        <i class="bi bi-person-gear fs-2 text-success mb-2 d-block"></i>
-                                        <span class="fw-semibold">Profil Akun</span>
-                                    </div>
-                                </div>
-                            </a>
+                    <div id="admin-product-grid" class="row row-cols-1 row-cols-md-3 g-4 mb-5" data-aos="fade-up">
+                        <div class="col text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Stats Cards Row 1 -->
-                    <div class="row g-3 mb-4">
+                    <!-- Section: Sales Dashboard -->
+                    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
+                        <div>
+                            <h3 class="fw-bold mb-0"><i class="bi bi-graph-up me-2 text-info"></i>Sales Dashboard</h3>
+                            <p class="text-muted small mb-0">Ringkasan penjualan dan statistik</p>
+                        </div>
+                        <a href="admin.html" class="btn btn-outline-info btn-sm rounded-pill px-3">
+                            Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                    <!-- Stats Cards -->
+                    <div class="row g-3 mb-4" data-aos="fade-up">
                         <div class="col-6 col-md-3">
                             <div class="card bg-dark border-secondary text-white h-100">
                                 <div class="card-body">
@@ -181,65 +181,18 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Order Status Cards -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-6 col-md">
-                            <a href="orders.html" class="text-decoration-none">
-                                <div class="card bg-warning bg-opacity-15 border-warning text-warning h-100">
-                                    <div class="card-body text-center py-3">
-                                        <h3 class="fw-bold mb-1" id="adminPending">0</h3>
-                                        <small><i class="bi bi-clock me-1"></i>Pending</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md">
-                            <a href="orders.html" class="text-decoration-none">
-                                <div class="card bg-info bg-opacity-15 border-info text-info h-100">
-                                    <div class="card-body text-center py-3">
-                                        <h3 class="fw-bold mb-1" id="adminProcessing">0</h3>
-                                        <small><i class="bi bi-box-seam me-1"></i>Processing</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md">
-                            <a href="orders.html" class="text-decoration-none">
-                                <div class="card bg-primary bg-opacity-15 border-primary text-primary h-100">
-                                    <div class="card-body text-center py-3">
-                                        <h3 class="fw-bold mb-1" id="adminShipped">0</h3>
-                                        <small><i class="bi bi-truck me-1"></i>Shipped</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md">
-                            <a href="orders.html" class="text-decoration-none">
-                                <div class="card bg-success bg-opacity-15 border-success text-success h-100">
-                                    <div class="card-body text-center py-3">
-                                        <h3 class="fw-bold mb-1" id="adminCompleted">0</h3>
-                                        <small><i class="bi bi-check-circle me-1"></i>Completed</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Charts and Tables Row -->
-                    <div class="row g-4 mb-4">
-                        <!-- Sales Chart -->
+                    <!-- Chart and Top Products -->
+                    <div class="row g-4 mb-5" data-aos="fade-up">
                         <div class="col-12 col-lg-8">
                             <div class="card bg-dark border-secondary text-white h-100">
                                 <div class="card-header border-secondary">
-                                    <i class="bi bi-graph-up me-2"></i>Penjualan 7 Hari Terakhir
+                                    <i class="bi bi-bar-chart me-2"></i>Penjualan 7 Hari Terakhir
                                 </div>
                                 <div class="card-body">
                                     <canvas id="salesChart" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <!-- Top Products -->
                         <div class="col-12 col-lg-4">
                             <div class="card bg-dark border-secondary text-white h-100">
                                 <div class="card-header border-secondary">
@@ -254,9 +207,61 @@
                         </div>
                     </div>
 
-                    <!-- Recent Orders and Low Stock -->
-                    <div class="row g-4 mb-4">
-                        <!-- Recent Orders -->
+                    <!-- Section: Kelola Pesanan -->
+                    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
+                        <div>
+                            <h3 class="fw-bold mb-0"><i class="bi bi-clipboard-check me-2 text-warning"></i>Kelola Pesanan</h3>
+                            <p class="text-muted small mb-0">Pantau dan proses pesanan pelanggan</p>
+                        </div>
+                        <a href="orders.html" class="btn btn-outline-warning btn-sm rounded-pill px-3">
+                            Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                    <!-- Order Status Cards -->
+                    <div class="row g-3 mb-4" data-aos="fade-up">
+                        <div class="col-6 col-md-3">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-warning bg-opacity-15 border-warning text-warning h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminPending">0</h3>
+                                        <small><i class="bi bi-clock me-1"></i>Pending</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-info bg-opacity-15 border-info text-info h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminProcessing">0</h3>
+                                        <small><i class="bi bi-box-seam me-1"></i>Processing</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-primary bg-opacity-15 border-primary text-primary h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminShipped">0</h3>
+                                        <small><i class="bi bi-truck me-1"></i>Shipped</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="orders.html" class="text-decoration-none">
+                                <div class="card bg-success bg-opacity-15 border-success text-success h-100">
+                                    <div class="card-body text-center py-3">
+                                        <h3 class="fw-bold mb-1" id="adminCompleted">0</h3>
+                                        <small><i class="bi bi-check-circle me-1"></i>Completed</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Recent Orders Table -->
+                    <div class="row g-4 mb-4" data-aos="fade-up">
                         <div class="col-12 col-lg-8">
                             <div class="card bg-dark border-secondary text-white">
                                 <div class="card-header border-secondary d-flex justify-content-between align-items-center">
@@ -283,7 +288,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Low Stock Alerts -->
                         <div class="col-12 col-lg-4">
                             <div class="card bg-dark border-secondary text-white h-100">
                                 <div class="card-header border-secondary bg-danger bg-opacity-10 text-danger">
@@ -683,6 +687,8 @@
                 document.getElementById('adminDashboard').style.display = 'block';
                 document.getElementById('userContent').style.display = 'none';
                 loadAdminDashboard();
+                // Load products for admin product grid
+                loadProducts('latest', 6, 'admin-product-grid');
             } else {
                 loadProducts('per_category', 4);
             }

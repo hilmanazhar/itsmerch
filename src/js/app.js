@@ -476,8 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // products
 let allProducts = []; // Cache for client-side filtering
 
-function loadProducts(sort = 'newest', limit = 0) {
-  const grid = document.getElementById('product-grid');
+function loadProducts(sort = 'newest', limit = 0, targetGridId = 'product-grid') {
+  const grid = document.getElementById(targetGridId);
   if (!grid) return;
 
   // Show loading
