@@ -1147,9 +1147,9 @@ function showUserState() {
         </li>
       </ul>
       <div class="mt-auto">
-        <ul class="nav flex-column nav-pills">
+        <ul class="nav flex-column nav-pills small">
           <li class="nav-item">
-            <a class="nav-link border border-danger text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</a>
+            <a class="nav-link bg-danger bg-opacity-25 border border-danger text-danger rounded" href="#" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</a>
           </li>
           <li class="nav-item">
             <a class="nav-link ${currentPage === 'about' ? 'active' : ''}" href="/about"><i class="bi bi-info-circle"></i> Tentang</a>
@@ -1190,12 +1190,12 @@ function showUserState() {
         </li>
       </ul>
       <div class="mt-auto">
-        <ul class="nav flex-column nav-pills">
+        <ul class="nav flex-column nav-pills small">
           <li class="nav-item">
-            <span class="nav-link text-info py-2"><i class="bi bi-person-circle"></i> Hi, ${escapeHtml(user.name)}</span>
+            <span class="nav-link text-info py-1"><i class="bi bi-person-circle"></i> Hi, ${escapeHtml(user.name)}</span>
           </li>
           <li class="nav-item">
-            <a class="nav-link border border-danger text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</a>
+            <a class="nav-link bg-danger bg-opacity-25 border border-danger text-danger rounded" href="#" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</a>
           </li>
           <li class="nav-item">
             <a class="nav-link ${currentPage === 'about' ? 'active' : ''}" href="/about"><i class="bi bi-info-circle"></i> Tentang</a>
