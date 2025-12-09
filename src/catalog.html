@@ -62,12 +62,16 @@
 
         /* Hide number input spinners */
         #quickAddQty::-webkit-outer-spin-button,
-        #quickAddQty::-webkit-inner-spin-button {
+        #quickAddQty::-webkit-inner-spin-button,
+        .no-spinner::-webkit-outer-spin-button,
+        .no-spinner::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-        #quickAddQty {
+        #quickAddQty,
+        .no-spinner {
             -moz-appearance: textfield;
+            appearance: textfield;
         }
     </style>
 </head>
@@ -312,8 +316,8 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="row g-3" style="min-height: 350px;">
+                        <div class="col-md-6 d-flex flex-column">
                             <div class="mb-3">
                                 <label class="form-label">Kategori</label>
                                 <select class="form-select" name="category_id" id="addCategorySelect">
@@ -330,7 +334,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="price" required>
+                                <input type="number" class="form-control no-spinner" name="price" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Gambar Produk</label>
@@ -364,8 +368,8 @@
                                 }
                             </script>
                         </div>
-                        <div class="col-md-6">
-                            <div class="card bg-dark border-secondary h-100">
+                        <div class="col-md-6 d-flex flex-column">
+                            <div class="card bg-dark border-secondary flex-grow-1 d-flex flex-column">
                                 <div class="card-header border-secondary">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="hasVariants"
@@ -375,16 +379,15 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body flex-grow-1 d-flex flex-column" style="overflow: hidden;">
                                     <!-- Stock for non-variant product (shown by default) -->
                                     <div id="noVariantStock">
                                         <label class="form-label">Stok Produk <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="stock" id="productStock" value="10" min="0" required>
-                                        <small class="text-muted">Masukkan jumlah stok produk</small>
+                                        <input type="number" class="form-control no-spinner" name="stock" id="productStock" value="10" min="0" required>
                                     </div>
                                     
                                     <!-- Stock for variant product (hidden by default) -->
-                                    <div id="variantFields" style="display: none;">
+                                    <div id="variantFields" style="display: none;" class="flex-grow-1">
                                         <p class="text-muted small">Ketik varian, pisahkan dengan koma:</p>
 
                                         <div class="mb-3">
@@ -403,7 +406,7 @@
 
                                         <div class="mb-3">
                                             <label class="form-label small">Stok per Varian</label>
-                                            <input type="number" class="form-control form-control-sm" id="variantStock"
+                                            <input type="number" class="form-control form-control-sm no-spinner" id="variantStock"
                                                 value="10" min="0">
                                             <small class="text-muted">Stok ini akan diterapkan ke SETIAP varian</small>
                                         </div>
@@ -437,8 +440,8 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="row g-3" style="min-height: 350px;">
+                        <div class="col-md-6 d-flex flex-column">
                             <div class="mb-3">
                                 <label class="form-label">Kategori</label>
                                 <select class="form-select" name="category_id" id="editCategorySelect">
@@ -455,7 +458,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Harga (Rp)</label>
-                                <input type="number" class="form-control" name="price" required>
+                                <input type="number" class="form-control no-spinner" name="price" required>
                             </div>
                             <input type="hidden" name="stock" id="editProductStock">
                             <div class="mb-3">
@@ -463,8 +466,8 @@
                                 <input type="text" class="form-control" name="image_url">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="card bg-dark border-secondary h-100">
+                        <div class="col-md-6 d-flex flex-column">
+                            <div class="card bg-dark border-secondary flex-grow-1 d-flex flex-column">
                                 <div class="card-header border-secondary">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="editHasVariants"
@@ -474,22 +477,22 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body flex-grow-1 d-flex flex-column" style="overflow: hidden;">
                                     <!-- Stock input for non-variant products -->
                                     <div id="editNoVariantStock">
                                         <label class="form-label">Stok Produk</label>
-                                        <input type="number" class="form-control" id="editBaseStock" min="0" value="0">
+                                        <input type="number" class="form-control no-spinner" id="editBaseStock" min="0" value="0">
                                     </div>
                                     
                                     <!-- Variant section (hidden by default) -->
-                                    <div id="editVariantSection" style="display: none;">
-                                        <!-- Existing variants -->
-                                        <div id="editVariantList" class="mb-3">
+                                    <div id="editVariantSection" style="display: none;" class="flex-grow-1 d-flex flex-column">
+                                        <!-- Existing variants - scrollable -->
+                                        <div id="editVariantList" class="mb-3 flex-grow-1" style="overflow-y: auto; max-height: 200px;">
                                             <p class="text-muted small text-center">Loading...</p>
                                         </div>
                                         
-                                        <!-- Add new variants -->
-                                        <div class="border-top border-secondary pt-3">
+                                        <!-- Add new variants - fixed at bottom -->
+                                        <div class="border-top border-secondary pt-3 mt-auto">
                                             <p class="text-muted small mb-2">Tambah varian baru:</p>
                                             <div class="row g-2 mb-2">
                                                 <div class="col-6">
@@ -503,7 +506,7 @@
                                             </div>
                                             <div class="row g-2">
                                                 <div class="col-6">
-                                                    <input type="number" class="form-control form-control-sm" id="editNewStock"
+                                                    <input type="number" class="form-control form-control-sm no-spinner" id="editNewStock"
                                                         placeholder="Stok" value="10" min="0">
                                                 </div>
                                                 <div class="col-6">
