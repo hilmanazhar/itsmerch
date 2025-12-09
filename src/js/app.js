@@ -660,11 +660,24 @@ function editProduct(id) {
   });
 }
 
+// Toggle edit variant fields based on checkbox
+function toggleEditVariantFields() {
+  const checkbox = document.getElementById('editHasVariants');
+  const noVariantStock = document.getElementById('editNoVariantStock');
+  const variantSection = document.getElementById('editVariantSection');
+
+  if (checkbox && noVariantStock && variantSection) {
+    const hasVariants = checkbox.checked;
+    noVariantStock.style.display = hasVariants ? 'none' : 'block';
+    variantSection.style.display = hasVariants ? 'block' : 'none';
+  }
+}
+
 function loadEditVariants(productId) {
   const listEl = document.getElementById('editVariantList');
-  const countEl = document.getElementById('editVariantCount');
   const noVariantStockEl = document.getElementById('editNoVariantStock');
-  const baseStockInput = document.getElementById('editBaseStock');
+  const variantSection = document.getElementById('editVariantSection');
+  const checkbox = document.getElementById('editHasVariants');
 
   if (!listEl) return;
 
@@ -673,22 +686,20 @@ function loadEditVariants(productId) {
   fetchJson(`${apiBase}/variants.php?product_id=${productId}`)
     .then(res => {
       if (!res.success || !res.variants || res.variants.length === 0) {
-        listEl.innerHTML = '<p class="text-muted small text-center">Tidak ada varian</p>';
-        countEl.textContent = '0';
+        // No variants - show stock input, uncheck checkbox
+        listEl.innerHTML = '<p class="text-muted small">Belum ada varian. Tambahkan varian di bawah.</p>';
 
-        // Show stock input for non-variant product
-        if (noVariantStockEl) {
-          noVariantStockEl.style.display = 'block';
-        }
+        if (checkbox) checkbox.checked = false;
+        if (noVariantStockEl) noVariantStockEl.style.display = 'block';
+        if (variantSection) variantSection.style.display = 'none';
         return;
       }
 
-      // Hide stock input since product has variants
-      if (noVariantStockEl) {
-        noVariantStockEl.style.display = 'none';
-      }
+      // Has variants - hide stock input, check checkbox, show variant section
+      if (checkbox) checkbox.checked = true;
+      if (noVariantStockEl) noVariantStockEl.style.display = 'none';
+      if (variantSection) variantSection.style.display = 'block';
 
-      countEl.textContent = res.variants.length;
       listEl.innerHTML = res.variants.map(v => `
         <div class="d-flex align-items-center justify-content-between mb-2 p-2 bg-secondary bg-opacity-25 rounded" id="variant-row-${v.id}">
           <div>

@@ -465,45 +465,54 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card bg-dark border-secondary h-100">
-                                <div
-                                    class="card-header border-secondary d-flex justify-content-between align-items-center">
-                                    <span><i class="bi bi-layers me-1"></i>Varian Produk</span>
-                                    <span class="badge bg-primary" id="editVariantCount">0</span>
+                                <div class="card-header border-secondary">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="editHasVariants"
+                                            onchange="toggleEditVariantFields()">
+                                        <label class="form-check-label" for="editHasVariants">
+                                            <i class="bi bi-layers me-1"></i>Produk memiliki varian
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="card-body" style="max-height: 250px; overflow-y: auto;">
-                                    <!-- Stock input for non-variant products (shown when no variants) -->
-                                    <div id="editNoVariantStock" style="display: none;">
+                                <div class="card-body" style="max-height: 280px; overflow-y: auto;">
+                                    <!-- Stock input for non-variant products -->
+                                    <div id="editNoVariantStock">
                                         <label class="form-label">Stok Produk</label>
                                         <input type="number" class="form-control" id="editBaseStock" min="0" value="0">
-                                        <small class="text-muted">Stok untuk produk tanpa varian</small>
                                     </div>
-                                    <!-- Variant list (shown when has variants) -->
-                                    <div id="editVariantList">
-                                        <p class="text-muted small text-center">Loading...</p>
-                                    </div>
-                                </div>
-                                <div class="card-footer border-secondary">
-                                    <p class="text-muted small mb-2">Tambah varian baru (pisahkan dengan koma):</p>
-                                    <div class="row g-2 mb-2">
-                                        <div class="col-6">
-                                            <input type="text" class="form-control form-control-sm" id="editNewSizes"
-                                                placeholder="Ukuran: S, M, L">
+                                    
+                                    <!-- Variant section (hidden by default) -->
+                                    <div id="editVariantSection" style="display: none;">
+                                        <!-- Existing variants -->
+                                        <div id="editVariantList" class="mb-3">
+                                            <p class="text-muted small text-center">Loading...</p>
                                         </div>
-                                        <div class="col-6">
-                                            <input type="text" class="form-control form-control-sm" id="editNewColors"
-                                                placeholder="Warna: Hitam, Putih">
-                                        </div>
-                                    </div>
-                                    <div class="row g-2">
-                                        <div class="col-6">
-                                            <input type="number" class="form-control form-control-sm" id="editNewStock"
-                                                placeholder="Stok" value="10" min="0">
-                                        </div>
-                                        <div class="col-6">
-                                            <button type="button" class="btn btn-success btn-sm w-100"
-                                                onclick="addNewVariantsFromEdit()">
-                                                <i class="bi bi-plus"></i> Tambah
-                                            </button>
+                                        
+                                        <!-- Add new variants -->
+                                        <div class="border-top border-secondary pt-3">
+                                            <p class="text-muted small mb-2">Tambah varian baru:</p>
+                                            <div class="row g-2 mb-2">
+                                                <div class="col-6">
+                                                    <input type="text" class="form-control form-control-sm" id="editNewSizes"
+                                                        placeholder="Ukuran: S, M, L">
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="text" class="form-control form-control-sm" id="editNewColors"
+                                                        placeholder="Warna: Hitam, Putih">
+                                                </div>
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <input type="number" class="form-control form-control-sm" id="editNewStock"
+                                                        placeholder="Stok" value="10" min="0">
+                                                </div>
+                                                <div class="col-6">
+                                                    <button type="button" class="btn btn-success btn-sm w-100"
+                                                        onclick="addNewVariantsFromEdit()">
+                                                        <i class="bi bi-plus"></i> Tambah
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
