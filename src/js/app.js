@@ -562,7 +562,7 @@ function loadProducts(sort = 'newest', limit = 0, targetGridId = 'product-grid')
         sortSelect.value = sortParam;
         sortSelect.addEventListener('change', (e) => {
           // Reload with new sort (server side)
-          window.location.href = `catalog.html?sort=${e.target.value}`;
+          window.location.href = `/catalog?sort=${e.target.value}`;
         });
       }
     })
@@ -599,7 +599,7 @@ function renderProductGrid(container, products) {
     return `
     <div class="${colClass}">
       <div class="card product-card h-100">
-        <a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit">
+        <a href="/product?id=${p.id}" style="text-decoration:none;color:inherit">
             <img src="${getProductImage(p.image_url, p.name)}" class="card-img-top" alt="${escapeHtml(p.name)}"
                  onerror="this.onerror=null; this.src=generatePlaceholder('${escapeAttr(p.name)}');">
             <div class="card-body">
@@ -1063,7 +1063,7 @@ function getUser() { try { return JSON.parse(localStorage.getItem('user') || 'nu
 function logout() {
   localStorage.removeItem('user');
   localStorage.removeItem('cart'); // Clear local cart cache
-  window.location.href = 'index.html';
+  window.location.href = '/home';
 }
 
 function showUserState() {
@@ -1096,7 +1096,10 @@ function showUserState() {
     fab.style.display = (user.role === 'admin') ? 'block' : 'none';
   }
 
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  // Get current page from path - support both /page and /page.html
+  const pathname = window.location.pathname;
+  let currentPage = pathname.split('/').pop().replace('.html', '') || 'home';
+  if (currentPage === 'index') currentPage = 'home';
 
   // Transform sidebar for admin
   if (user.role === 'admin' && sidebar) {
@@ -1107,19 +1110,19 @@ function showUserState() {
       </div>
       <ul class="nav flex-column mb-auto nav-pills">
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'index.html' ? 'active' : ''}" href="index.html"><i class="bi bi-house-door"></i> Toko</a>
+          <a class="nav-link ${currentPage === 'home' ? 'active' : ''}" href="/home"><i class="bi bi-house-door"></i> Toko</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'catalog.html' ? 'active' : ''}" href="catalog.html"><i class="bi bi-box"></i> Katalog Produk</a>
+          <a class="nav-link ${currentPage === 'catalog' ? 'active' : ''}" href="/catalog"><i class="bi bi-box"></i> Katalog Produk</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'admin.html' ? 'active' : ''}" href="admin.html"><i class="bi bi-graph-up"></i> Sales Dashboard</a>
+          <a class="nav-link ${currentPage === 'admin' ? 'active' : ''}" href="/admin"><i class="bi bi-graph-up"></i> Sales Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'orders.html' ? 'active' : ''}" href="orders.html"><i class="bi bi-clipboard-check"></i> Kelola Pesanan</a>
+          <a class="nav-link ${currentPage === 'orders' ? 'active' : ''}" href="/orders"><i class="bi bi-clipboard-check"></i> Kelola Pesanan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'coupons-admin.html' ? 'active' : ''}" href="coupons-admin.html"><i class="bi bi-ticket-perforated"></i> Kelola Kupon</a>
+          <a class="nav-link ${currentPage === 'coupons-admin' ? 'active' : ''}" href="/coupons-admin"><i class="bi bi-ticket-perforated"></i> Kelola Kupon</a>
         </li>
       </ul>
       <div class="mt-auto p-3">
@@ -1138,10 +1141,10 @@ function showUserState() {
       </div>
       <ul class="nav flex-column mb-auto nav-pills">
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'index.html' ? 'active' : ''}" href="index.html"><i class="bi bi-house-door"></i> Beranda</a>
+          <a class="nav-link ${currentPage === 'home' ? 'active' : ''}" href="/home"><i class="bi bi-house-door"></i> Beranda</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'catalog.html' ? 'active' : ''}" href="catalog.html"><i class="bi bi-box"></i> Katalog</a>
+          <a class="nav-link ${currentPage === 'catalog' ? 'active' : ''}" href="/catalog"><i class="bi bi-box"></i> Katalog</a>
         </li>
         <li class="nav-item">
           <a id="cartButton" class="nav-link" href="#" data-bs-toggle="offcanvas" data-bs-target="#cartDrawer">
@@ -1149,13 +1152,13 @@ function showUserState() {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'wishlist.html' ? 'active' : ''}" href="wishlist.html"><i class="bi bi-heart"></i> Wishlist</a>
+          <a class="nav-link ${currentPage === 'wishlist' ? 'active' : ''}" href="/wishlist"><i class="bi bi-heart"></i> Wishlist</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'transactions.html' ? 'active' : ''}" href="transactions.html"><i class="bi bi-receipt"></i> Transaksi</a>
+          <a class="nav-link ${currentPage === 'transactions' ? 'active' : ''}" href="/transactions"><i class="bi bi-receipt"></i> Transaksi</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ${currentPage === 'profile.html' ? 'active' : ''}" href="profile.html"><i class="bi bi-person"></i> Profil</a>
+          <a class="nav-link ${currentPage === 'profile' ? 'active' : ''}" href="/profile"><i class="bi bi-person"></i> Profil</a>
         </li>
       </ul>
       <div class="mt-auto p-3">
@@ -1174,7 +1177,7 @@ function showUserState() {
   if (badge) {
     badge.innerHTML = `
       <div class="text-white mb-2"><small>Hi, ${escapeHtml(user.name)}</small></div>
-      <a href="transactions.html" class="btn btn-sm btn-outline-info w-100 mb-2">
+      <a href="/transactions" class="btn btn-sm btn-outline-info w-100 mb-2">
         <i class="bi bi-receipt me-1"></i>Transaksi
       </a>
       <button id="logoutBtn" class="btn btn-sm btn-outline-danger w-100">Logout</button>
@@ -1565,7 +1568,7 @@ function createOrderNotification(userId, orderId, status) {
       type: 'order_status',
       title: notif.title,
       message: notif.message,
-      link: 'transactions.html'
+      link: '/transactions'
     }
   });
 }
