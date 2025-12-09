@@ -575,14 +575,17 @@ function renderProductGrid(container, products) {
       </div>`;
   }
 
-  html += products.map(p => `
-    <div class="col">
+  html += products.map(p => {
+    // Use flexible col for admin dashboard, fixed col-md-3 for user views
+    const colClass = isAdminGrid ? 'col' : 'col-md-3 mb-4';
+    return `
+    <div class="${colClass}">
       <div class="card product-card h-100">
         <a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit">
             <img src="${getProductImage(p.image_url, p.name)}" class="card-img-top" alt="${escapeHtml(p.name)}"
                  onerror="this.onerror=null; this.src=generatePlaceholder('${escapeAttr(p.name)}');">
             <div class="card-body">
-            <h5 class="card-title text-truncate">${escapeHtml(p.name)}</h5>
+            <h5 class="card-title${isAdminGrid ? ' text-truncate' : ''}">${escapeHtml(p.name)}</h5>
             <p class="text-info fw-bold mb-1">Rp ${Number(p.price).toLocaleString()}</p>
             <small class="d-block mb-2 text-muted">Stok: ${p.stock}</small>
             </div>
@@ -602,7 +605,7 @@ function renderProductGrid(container, products) {
         </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 
   container.innerHTML = html;
 }
