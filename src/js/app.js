@@ -778,8 +778,9 @@ function deleteProduct(id) {
     fetchJson(`${apiBase}/admin_delete_product.php?id=${id}`, { method: 'POST' })
       .then(res => {
         if (res.success) {
-          alert('Produk dihapus');
-          loadProducts();
+          showToast('Produk dihapus');
+          // Reload page to reset layout properly
+          setTimeout(() => location.reload(), 500);
         } else {
           alert('Gagal menghapus: ' + res.message);
         }
@@ -826,10 +827,19 @@ function renderVariantCheckboxes() {
 
 function toggleVariantFields() {
   const checkbox = document.getElementById('hasVariants');
-  const fields = document.getElementById('variantFields');
-  if (checkbox && fields) {
-    fields.style.display = checkbox.checked ? 'block' : 'none';
-    if (checkbox.checked && variantOptions.sizes.length === 0) {
+  const variantFields = document.getElementById('variantFields');
+  const noVariantStock = document.getElementById('noVariantStock');
+
+  if (checkbox && variantFields) {
+    const hasVariants = checkbox.checked;
+    variantFields.style.display = hasVariants ? 'block' : 'none';
+
+    // Toggle non-variant stock field
+    if (noVariantStock) {
+      noVariantStock.style.display = hasVariants ? 'none' : 'block';
+    }
+
+    if (hasVariants && variantOptions.sizes.length === 0) {
       loadVariantOptions();
     }
   }

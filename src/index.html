@@ -559,15 +559,9 @@
                                 <label class="form-label">Deskripsi</label>
                                 <textarea class="form-control" name="description" rows="3"></textarea>
                             </div>
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="price" required>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label">Stok <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="stock" required>
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="price" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">URL Gambar</label>
@@ -585,32 +579,43 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="card-body" id="variantFields" style="display: none;">
-                                    <p class="text-muted small">Ketik varian yang tersedia, pisahkan dengan koma:</p>
-
-                                    <div class="mb-3">
-                                        <label class="form-label small">Ukuran</label>
-                                        <input type="text" class="form-control form-control-sm" id="variantSizes"
-                                            placeholder="Contoh: S, M, L, XL, XXL">
-                                        <small class="text-muted">Pisahkan dengan koma</small>
+                                <div class="card-body">
+                                    <!-- Stock for non-variant product (shown by default) -->
+                                    <div id="noVariantStock">
+                                        <label class="form-label">Stok Produk <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" name="stock" id="productStock" value="10" min="0" required>
+                                        <small class="text-muted">Masukkan jumlah stok produk</small>
                                     </div>
+                                    
+                                    <!-- Stock for variant product (hidden by default) -->
+                                    <div id="variantFields" style="display: none;">
+                                        <p class="text-muted small">Ketik varian, pisahkan dengan koma:</p>
 
-                                    <div class="mb-3">
-                                        <label class="form-label small">Warna</label>
-                                        <input type="text" class="form-control form-control-sm" id="variantColors"
-                                            placeholder="Contoh: Hitam, Putih, Biru, Merah">
-                                        <small class="text-muted">Pisahkan dengan koma</small>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small">Ukuran</label>
+                                            <input type="text" class="form-control form-control-sm" id="variantSizes"
+                                                placeholder="Contoh: S, M, L, XL, XXL">
+                                            <small class="text-muted">Pisahkan dengan koma</small>
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label class="form-label small">Stok per Varian</label>
-                                        <input type="number" class="form-control form-control-sm" id="variantStock"
-                                            value="10" min="0">
-                                    </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small">Warna</label>
+                                            <input type="text" class="form-control form-control-sm" id="variantColors"
+                                                placeholder="Contoh: Hitam, Putih, Biru, Merah">
+                                            <small class="text-muted">Pisahkan dengan koma</small>
+                                        </div>
 
-                                    <div class="alert alert-info py-2 small mb-0">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        Varian akan dibuat untuk setiap kombinasi ukuran x warna.
+                                        <div class="mb-3">
+                                            <label class="form-label small">Stok per Varian</label>
+                                            <input type="number" class="form-control form-control-sm" id="variantStock"
+                                                value="10" min="0">
+                                            <small class="text-muted">Stok ini akan diterapkan ke SETIAP varian</small>
+                                        </div>
+
+                                        <div class="alert alert-info py-2 small mb-0">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Stok per varian × jumlah kombinasi = Total stok produk
+                                        </div>
                                     </div>
                                 </div>
                             </div>
