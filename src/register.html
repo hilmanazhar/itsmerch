@@ -55,7 +55,7 @@
                 .then(res => {
                     if (res.success) {
                         alert('Registrasi berhasil! Silakan login.');
-                        window.location.href = 'index.html';
+                        window.location.href = '/home';
                     } else {
                         alert('Gagal: ' + (res.error || res.message));
                     }

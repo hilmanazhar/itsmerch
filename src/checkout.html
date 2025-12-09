@@ -215,12 +215,12 @@
             const user = getUser();
             if (!user) {
                 alert('Silakan login terlebih dahulu');
-                window.location.href = 'index.html';
+                window.location.href = '/home';
                 return;
             }
             if (user.role === 'admin') {
                 alert('Admin tidak dapat melakukan pemesanan');
-                window.location.href = 'admin.html';
+                window.location.href = '/admin';
                 return;
             }
 
@@ -575,17 +575,17 @@
                                 }).then(res => {
                                     console.log('Status updated:', res);
                                     setTimeout(() => {
-                                        window.location.href = 'transactions.html';
+                                        window.location.href = '/transactions';
                                     }, 1000);
                                 }).catch(err => {
                                     console.error('Update status failed:', err);
-                                    window.location.href = 'transactions.html';
+                                    window.location.href = '/transactions';
                                 });
                             },
                             onPending: function (result) {
                                 document.getElementById('loadingOverlay').classList.add('d-none');
                                 alert('Pembayaran pending. Silakan selesaikan pembayaran.');
-                                window.location.href = 'transactions.html';
+                                window.location.href = '/transactions';
                             },
                             onError: function (result) {
                                 document.getElementById('loadingOverlay').classList.add('d-none');

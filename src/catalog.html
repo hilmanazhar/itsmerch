@@ -235,7 +235,7 @@
                     <span>Total:</span>
                     <span id="cart-total" class="text-primary">Rp 0</span>
                 </div>
-                <button onclick="window.location.href='checkout.html'"
+                <button onclick="window.location.href='/checkout'"
                     class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-lg">
                     Checkout Sekarang <i class="bi bi-arrow-right ms-2"></i>
                 </button>
@@ -669,7 +669,7 @@
             html += products.map(p => `
                 <div class="col-md-3 mb-4">
                     <div class="card product-card">
-                        <a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit">
+                        <a href="product?id=${p.id}" style="text-decoration:none;color:inherit">
                             <img src="${getProductImage(p.image_url, p.name)}" class="card-img-top" alt="${escapeHtml(p.name)}"
                                  onerror="this.onerror=null; this.src=generatePlaceholder('${escapeAttr(p.name)}');">
                             <div class="card-body">
