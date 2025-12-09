@@ -1601,12 +1601,16 @@ document.addEventListener('DOMContentLoaded', function () {
   if (desktopCartBtn) {
     desktopCartBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      showCart();
-
       const cartDrawer = document.getElementById('cartDrawer');
       if (cartDrawer) {
         const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(cartDrawer);
-        offcanvas.show();
+        // Toggle - if visible hide, if hidden show
+        if (cartDrawer.classList.contains('show')) {
+          offcanvas.hide();
+        } else {
+          showCart();
+          offcanvas.show();
+        }
       }
     });
   }
