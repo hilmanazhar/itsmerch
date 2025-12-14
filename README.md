@@ -112,7 +112,7 @@ Berikut adalah gambaran umum arsitektur sistem "My ITS Merch":
 | Nama Anggota | NRP | Deskripsi Tugas |
 | :--- | :--- | :--- |
 | **Muhammad Hilman Azhar** | 5025241264 | |
-| **A. Wildan Kevin Asysyauqi** | 5025241265 | |
+| **A. Wildan Kevin Assyauqi** | 5025241265 | |
 | **Imam Baidhawi** | 5025241266 | |
 
 ---
