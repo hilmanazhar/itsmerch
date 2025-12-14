@@ -1,100 +1,119 @@
-# ITS Merchandise Bootstrap Project
+# My ITS Merch - Platform E-Commerce Merchandise ITS
 
-This project is a web application for showcasing merchandise using HTML, CSS, and JavaScript with Bootstrap. It is designed to provide a responsive and user-friendly interface for users to browse and interact with various products.
+Dokumentasi ini disusun sebagai laporan Final Project (FP) Pemrograman Web. Proyek ini adalah platform e-commerce yang memungkinkan pengguna membeli merchandise resmi ITS dengan fitur pembayaran digital dan perhitungan ongkos kirim otomatis.
 
-## Project Structure
+---
 
-```
-its-merch-bootstrap
-├── src
-│   ├── index.html          # Main HTML entry point
-│   ├── css
-│   │   └── styles.css      # Custom styles for the application
-│   ├── js
-│   │   ├── app.js          # Main JavaScript file
-│   │   ├── components
-│   │   │   ├── adminDashboard.js  # Admin Dashboard component
-│   │   │   ├── cartDrawer.js       # Cart Drawer component
-│   │   │   ├── figmaIcon.js        # Figma Icon component
-│   │   │   ├── hero.js             # Hero component
-│   │   │   ├── itemCard.js         # Item Card component
-│   │   │   ├── productCard.js      # Product Card component
-│   │   │   ├── productDetail.js     # Product Detail component
-│   │   │   ├── sectionHeader.js     # Section Header component
-│   │   │   ├── sidebar.js           # Sidebar component
-│   │   │   ├── toast.js             # Toast component
-│   │   │   ├── topBar.js            # Top Bar component
-│   │   │   └── ui
-│   │   │       ├── accordion.js      # Accordion UI component
-│   │   │       ├── alertDialog.js    # Alert Dialog component
-│   │   │       ├── alert.js          # Alert component
-│   │   │       ├── aspectRatio.js    # Aspect Ratio component
-│   │   │       ├── avatar.js         # Avatar component
-│   │   │       ├── badge.js          # Badge component
-│   │   │       ├── breadcrumb.js      # Breadcrumb component
-│   │   │       ├── button.js         # Button component
-│   │   │       ├── calendar.js       # Calendar component
-│   │   │       ├── card.js           # Card component
-│   │   │       ├── carousel.js       # Carousel component
-│   │   │       ├── chart.js          # Chart component
-│   │   │       ├── checkbox.js       # Checkbox component
-│   │   │       ├── collapsible.js    # Collapsible component
-│   │   │       ├── command.js        # Command functionality
-│   │   │       ├── contextMenu.js    # Context Menu component
-│   │   │       ├── dialog.js         # Dialog component
-│   │   │       ├── drawer.js         # Drawer component
-│   │   │       ├── dropdownMenu.js   # Dropdown Menu component
-│   │   │       ├── form.js           # Form-related components
-│   │   │       ├── hoverCard.js      # Hover Card component
-│   │   │       ├── inputOtp.js       # Input OTP component
-│   │   │       ├── input.js          # Input component
-│   │   │       ├── label.js          # Label component
-│   │   │       ├── menubar.js        # Menubar component
-│   │   │       ├── navigationMenu.js # Navigation Menu component
-│   │   │       ├── pagination.js      # Pagination component
-│   │   │       ├── popover.js        # Popover component
-│   │   │       ├── progress.js       # Progress component
-│   │   │       ├── radioGroup.js     # Radio Group component
-│   │   │       ├── resizable.js      # Resizable UI elements
-│   │   │       ├── scrollArea.js     # Scrollable areas
-│   │   │       ├── select.js         # Select component
-│   │   │       ├── separator.js       # Separator component
-│   │   │       ├── sheet.js          # Sheet component
-│   │   │       ├── sidebar.js        # Sidebar component
-│   │   │       ├── skeleton.js       # Skeleton component
-│   │   │       ├── slider.js         # Slider component
-│   │   │       ├── sonner.js         # Sonner component
-│   │   │       ├── switch.js         # Switch component
-│   │   │       ├── table.js          # Table component
-│   │   │       ├── tabs.js           # Tabs component
-│   │   │       ├── textarea.js       # Textarea component
-│   │   │       ├── toggleGroup.js    # Toggle Group component
-│   │   │       ├── toggle.js         # Toggle component
-│   │   │       ├── tooltip.js        # Tooltip component
-│   │   │       └── utils.js          # Utility functions for UI components
-│   ├── guidelines
-│   │   └── guidelines.md             # Project guidelines and documentation
-│   ├── lib
-│   │   ├── data.js                   # Data-related functions and constants
-│   │   └── utils.js                  # Utility functions for the application
-├── README.md                         # Project documentation
-```
+## 📑 Daftar Isi
+1. [Laporan Proyek](#1-laporan-proyek)
+    - [Frontend & Backend Development](#11-frontend--backend-development)
+    - [Database Implementation](#12-database-implementation)
+    - [Integrasi API](#13-integrasi-api)
+    - [Pengujian (Testing)](#14-pengujian-testing)
+2. [Diagram Sistem](#2-diagram-sistem)
+3. [User Guide](#3-user-guide)
+4. [Pembagian Jobdesk](#4-pembagian-jobdesk)
 
-## Setup Instructions
+---
 
-1. Clone the repository to your local machine.
-2. Navigate to the project directory.
-3. Open `src/index.html` in your web browser to view the application.
-4. Customize styles in `src/css/styles.css` as needed.
-5. Modify JavaScript functionality in the `src/js` directory.
+## 1. Laporan Proyek
 
-## Usage Guidelines
+### 1.1 Frontend & Backend Development
 
-- Ensure that all components are properly linked in `index.html`.
-- Follow the guidelines in `src/guidelines/guidelines.md` for best practices.
-- Use Bootstrap classes to enhance the UI and ensure responsiveness.
-- Test components thoroughly to ensure functionality and user experience.
+**Frontend:**
+Sisi antarmuka dibangun menggunakan pendekatan *Component-Based* menggunakan JavaScript Native (Vanilla JS) dan CSS Framework (Bootstrap) untuk memastikan responsivitas.
+* **Struktur Halaman:** Menggunakan file HTML terpisah untuk setiap fitur utama seperti `index.html` (Beranda), `catalog.html` (Daftar Produk), `product.html` (Detail Produk), dan `checkout.html`.
+* **Komponen Dinamis:** Menggunakan JavaScript Module (`src/js/components/`) untuk merender elemen yang berulang seperti `productCard.js` (Kartu Produk) dan `topBar.js` (Navigasi) agar kode lebih rapi dan mudah dikelola.
+* **Interaktivitas:** Menggunakan AJAX/Fetch API untuk berkomunikasi dengan backend tanpa reload halaman penuh (contoh: menambah item ke keranjang via `cartDrawer.js`).
 
-## License
+**Backend:**
+Sisi server dibangun menggunakan **PHP Native** yang berfungsi sebagai REST API. Backend menangani logika bisnis, validasi data, dan komunikasi ke database.
+* **API Endpoints:** Semua request dari frontend diproses melalui folder `src/api/`. Contohnya `get_products.php` untuk mengambil data produk dan `checkout.php` untuk memproses transaksi.
+* **Autentikasi:** Menggunakan PHP Session dan validasi database untuk login (`login.php`) dan registrasi (`register.php`).
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+### 1.2 Database Implementation
+
+Proyek ini menggunakan database relasional **MySQL/MariaDB**. Struktur database dirancang untuk menangani integritas data transaksi e-commerce.
+
+* **File Konfigurasi:** Koneksi database diatur dalam file `src/api/db.php` yang mendukung konfigurasi environment (local maupun hosting seperti Railway/InfinityFree).
+* **Skema Database:** Berdasarkan file SQL yang disertakan (`its_merchandise (3).sql`), tabel utama meliputi:
+    * `users`: Menyimpan data pengguna dan peran (admin/user).
+    * `products`: Menyimpan detail merchandise, harga, stok, dan gambar.
+    * `carts`: Menyimpan item keranjang belanja sementara per user.
+    * `orders` & `order_details`: Menyimpan riwayat transaksi dan status pembayaran.
+    * `user_addresses`: Menyimpan alamat pengiriman untuk perhitungan ongkir.
+    * `coupons`: Fitur potongan harga.
+
+### 1.3 Integrasi API
+
+Sistem ini terintegrasi dengan dua layanan eksternal utama untuk mensimulasikan proses e-commerce yang nyata:
+
+1.  **RajaOngkir API (Starter):**
+    * Digunakan untuk mengambil data Provinsi dan Kota di Indonesia secara *real-time*.
+    * Menghitung biaya ongkos kirim berdasarkan kurir (JNE, POS, TIKI) dari lokasi toko ke alamat pembeli.
+    * Implementasi terdapat pada file `rajaongkir_config.php` dan `get_shipping_cost.php`.
+
+2.  **Midtrans Payment Gateway (Snap API):**
+    * Digunakan untuk memproses pembayaran non-tunai (QRIS, Virtual Account, E-Wallet).
+    * Backend menghasilkan `Snap Token` saat checkout, yang kemudian membuka popup pembayaran di frontend.
+    * Status pembayaran diperbarui otomatis melalui mekanisme Webhook/Notification Handler (`midtrans_notification.php`).
+    * Implementasi terdapat pada `midtrans_config.php` dan logika checkout.
+
+### 1.4 Pengujian (Testing)
+
+Pengujian dilakukan untuk memastikan fungsionalitas sistem berjalan dengan baik:
+* **Unit Testing (Koneksi):** Menggunakan script `test_db.php` untuk memverifikasi koneksi database berhasil sebelum deployment.
+* **Functional Testing:**
+    * *Alur Pembelian:* User Login -> Pilih Produk -> Tambah ke Keranjang -> Checkout (Pilih Alamat & Kurir) -> Bayar via Midtrans (Sandbox).
+    * *Validasi Stok:* Memastikan stok berkurang setelah pesanan dibuat.
+    * *Admin Panel:* Memastikan admin bisa menambah produk dan memantau order masuk (`admin.html`).
+
+---
+
+## 2. Diagram Sistem
+
+Berikut adalah gambaran umum arsitektur sistem "My ITS Merch":
+
+* **Client Side:** HTML5, CSS3, JavaScript (Fetch API).
+* **Server Side:** PHP (API Logic), Composer (Dependency Manager).
+* **Database:** MySQL.
+* **3rd Party Services:** RajaOngkir (Logistik), Midtrans (Payment).
+
+*(Silakan merujuk pada file `DIAGRAMS.md` yang disertakan dalam repository ini untuk diagram alur yang lebih rinci, seperti Entity Relationship Diagram atau Flowchart Transaksi)*.
+
+---
+
+## 3. User Guide
+
+### Instalasi & Konfigurasi (Lokal/Hosting)
+
+1.  **Database:**
+    * Buat database baru di MySQL (misal: `its_merch`).
+    * Import file `its_merchandise (3).sql` ke dalam database tersebut.
+2.  **Konfigurasi API:**
+    * Buka `src/api/db.php` dan sesuaikan kredensial database (`$host`, `$user`, `$pass`, `$db`).
+    * Buka `src/api/rajaongkir_config.php` dan masukkan API Key RajaOngkir Anda.
+    * Buka `src/api/midtrans_config.php` dan masukkan Server Key & Client Key dari Midtrans Sandbox Anda.
+3.  **Menjalankan Proyek:**
+    * Pastikan server lokal (Apache/Nginx/XAMPP) berjalan.
+    * Akses `http://localhost/its-merch-bootstrap/src/index.html` di browser.
+
+### Cara Penggunaan (Pembeli)
+1.  **Registrasi/Login:** Buat akun baru atau masuk untuk mulai berbelanja.
+2.  **Belanja:** Pilih produk di Katalog, atur varian (jika ada), dan masukkan ke keranjang.
+3.  **Checkout:** Buka keranjang, klik checkout. Isi alamat pengiriman lengkap untuk mendapatkan opsi ongkir.
+4.  **Pembayaran:** Pilih kurir pengiriman, lalu klik "Bayar". Selesaikan pembayaran di jendela Midtrans.
+5.  **Cek Status:** Lihat status pesanan di menu Profil -> Riwayat Pesanan (`orders.html`).
+
+---
+
+## 4. Pembagian Jobdesk
+
+| Nama Anggota | NRP | Deskripsi Tugas |
+| :--- | :--- | :--- |
+| **[Nama Anggota 1]** | [NRP] | |
+| **[Nama Anggota 2]** | [NRP] | |
+| **[Nama Anggota 3]** | [NRP] | |
+
+---
+*© 2025 My ITS Merch - Final Project Pemrograman Web*
