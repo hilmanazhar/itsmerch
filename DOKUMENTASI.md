@@ -674,10 +674,10 @@ define('RAJAONGKIR_API_KEY', 'your_api_key');
 
 | Role | Nama |
 |------|------|
-| Developer | Hilman Azhar |
+| Developer | Hilman Azhar, Wildan Kevin, Imam Baidhawi |
 | Institution | Institut Teknologi Sepuluh Nopember |
 
 ---
 
-**Dokumen ini dibuat pada:** Desember 2024  
+**Dokumen ini dibuat pada:** Desember 2025  
 **Versi:** 1.0
